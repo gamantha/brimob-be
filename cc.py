@@ -1413,6 +1413,25 @@ def laporan_giat_submit():
 ################### LAPORAN SIAP GERAK #################################################
 
 
+@cc_blueprint.route('/siap_gerak_read', methods=["POST"])
+def siap_gerak_read():
+    db = get_db()
+    siap_gerak_id = request.json.get('siap_gerak_id')
+    cursor = db.cursor(dictionary=True)
+    query = "select title, tanggal_laporan, notes1, notes2, status, approved, approved_by, approved_at " \
+            "from siap_gerak"
+    cursor.execute(query,)
+    record = cursor.fetchall()
+    cursor.close()
+    result = dict()
+    # print(record)
+    temp = dict()
+
+    return jsonify(record)
+
+
+
+
 @cc_blueprint.route('/data_siap_gerak_read', methods=["POST"])
 def data_siap_gerak_read():
     db = get_db()
