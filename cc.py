@@ -1682,6 +1682,122 @@ def siap_gerak_approve():
 
 
 
+################### SISKAMTIBMAS CRUD #################################################
+
+
+@cc_blueprint.route('/siskamtibmas_create', methods=["POST"])
+def siskamtibmas_create():
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    no_laporan = request.json.get('no_laporan')
+    tgl_laporan = request.json.get('tgl_laporan')
+
+
+
+    query = "INSERT INTO siskambtibmas (no_laporan, tgl_laporan) VALUES (%s, %s)"
+    cursor.execute(query, (no_laporan, tgl_laporan,))
+
+    result = dict()
+    try:
+        db.commit()
+    except mysql.connector.Error as error:
+        print("Failed to update record to database rollback: {}".format(error))
+        # reverting changes because of exception
+        cursor.rollback()
+        result['result'] = 'failed'
+        result['valid'] = 0
+        result['rowcount'] = cursor.rowcount
+    finally:
+
+        cursor.close()
+        result['result'] = 'success'
+        result['valid'] = 1
+        result['rowcount'] = cursor.rowcount
+    cursor.close()
+    return result
+
+@cc_blueprint.route('/siskamtibmas_update', methods=["POST"])
+def siskamtibmas_update():
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    id = request.json.get('id')
+    no_laporan = request.json.get('no_laporan')
+    tgl_laporan = request.json.get('tgl_laporan')
+
+    status = request.json.get('status')
+    dasar = request.json.get('dasar')
+    lainlain = request.json.get('lainlain')
+    penutup = request.json.get('penutup')
+    meta = request.json.get('meta')
+
+
+    query = "UPDATE siskamtibmas set no_laporan = %s, tgl_laporan = %s, status = %s, dasar = %s, lainlain = %s, penutup = %s, meta = %s where id = %s"
+    cursor.execute(query, (no_laporan,tgl_laporan,status,dasar,lainlain,penutup,meta,id,))
+
+    # print("here")
+    result = dict()
+    try:
+        db.commit()
+    except mysql.connector.Error as error:
+        print("Failed to update record to database rollback: {}".format(error))
+        # reverting changes because of exception
+        cursor.rollback()
+        result['result'] = 'failed'
+        result['valid'] = 0
+        result['rowcount'] = cursor.rowcount
+    finally:
+
+        cursor.close()
+        result['result'] = 'success'
+        result['valid'] = 1
+        result['rowcount'] = cursor.rowcount
+    cursor.close()
+    return result
+
+@cc_blueprint.route('/siskamtibmas_delete', methods=["DELETE"])
+def siskamtibmas_delete():
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    siskamtibmas_id = request.json.get('siskamtibmas_id')
+
+    query = "DELETE FROM siskamtibmas where id = %s"
+    cursor.execute(query, (siskamtibmas_id,))
+
+
+    result = dict()
+    try:
+        db.commit()
+        result['row_affected'] = cursor.rowcount
+        result['result'] = 'success'
+        result['valid'] = 1
+    except mysql.connector.Error as error:
+        print("Failed to update record to database rollback: {}".format(error))
+        # reverting changes because of exception
+        cursor.rollback()
+        result['result'] = 'failed'
+        result['row_affected'] = cursor.rowcount
+        result['valid'] = 0
+    finally:
+
+        cursor.close()
+
+    cursor.close()
+    return result
+
+@cc_blueprint.route('/siskamtibmas_read', methods=["POST"])
+def siskamtibmas_read():
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    siskamtibmas_id = request.json.get('siskamtibmas_id')
+    query = "SELECT id, no_laporan, tgl_laporan, approved_by, date_submitted, date_approved, status, dasar, lainlain,penutup, meta from region WHERE id = %s"
+    cursor.execute(query, (str(siskamtibmas_id),))
+    record = cursor.fetchone()
+    cursor.close()
+    result = dict()
+    result = record
+    return jsonify(result)
+
+
 ################### DATA PIMPINAN CRUD #################################################
 
 @cc_blueprint.route('/komandan_image_upload', methods=["POST"])
