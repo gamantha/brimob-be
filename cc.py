@@ -1412,6 +1412,27 @@ def laporan_giat_submit():
 
 ################### LAPORAN SIAP GERAK #################################################
 
+
+@cc_blueprint.route('/data_siap_gerak_read', methods=["POST"])
+def data_siap_gerak_read():
+    db = get_db()
+    siap_gerak_id = request.json.get('siap_gerak_id')
+    cursor = db.cursor(dictionary=True)
+    query = "select region_id, region.region_name, region_custom_name, jumlah_riil, jumlah_pelaksana_tugas, jumlah_siap_opsnal, siap_opsnal, jumlah_cadangan, keterangan " \
+            "from data_siap_gerak left join region on region.id = data_siap_gerak.region_id where siap_gerak_id = %s"
+    cursor.execute(query,(siap_gerak_id,))
+    record = cursor.fetchall()
+    cursor.close()
+    result = dict()
+    # print(record)
+    temp = dict()
+
+    return jsonify(record)
+
+
+
+
+
 @cc_blueprint.route('/siap_gerak_create', methods=["POST"])
 def siap_gerak_create():
     db = get_db()
