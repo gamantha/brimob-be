@@ -1648,6 +1648,34 @@ def siap_gerak_update():
     cursor.close()
     return result
 
+@cc_blueprint.route('/siap_gerak_approve', methods=["POST"])
+def siap_gerak_approve():
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    siap_gerak_id = request.json.get('siap_gerak_id')
+    user_id = request.json.get('user_id')
+    approved = request.json.get('approved')
+
+    query = "UPDATE siap_gerak set approved_by = %s, approved = %s where id = %s"
+    cursor.execute(query, (user_id,approved,siap_gerak_id,))
+
+
+    result = dict()
+    try:
+        db.commit()
+    except mysql.connector.Error as error:
+        print("Failed to update record to database rollback: {}".format(error))
+        # reverting changes because of exception
+        cursor.rollback()
+        result['result'] = 'failed'
+        result['valid'] = 0
+    finally:
+
+        cursor.close()
+        result['result'] = 'success'
+        result['valid'] = 1
+    cursor.close()
+    return result
 
 
 
