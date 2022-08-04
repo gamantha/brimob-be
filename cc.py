@@ -1629,24 +1629,25 @@ def siap_gerak_update():
     notes2 = request.json.get('notes2')
 
 
-    query = "UPDATE siap_gerak set title = %s, tanggal_laporan = %s, notes1 = %s, notes2 = %s where id = %s"
-    cursor.execute(query, (title,tanggal_laporan,siap_gerak_id,notes1, notes2))
+    query = "UPDATE siap_gerak SET siap_gerak.title = %s, tanggal_laporan = %s, notes1 = %s, notes2 = %s where siap_gerak.id = %s"
+    cursor.execute(query, (title,tanggal_laporan,notes1, notes2,siap_gerak_id,))
 
 
     result = dict()
     try:
         db.commit()
+        cursor.close()
+        result['result'] = 'success'
+        result['row_affected'] = cursor.rowcount
+        result['valid'] = 1
     except mysql.connector.Error as error:
         print("Failed to update record to database rollback: {}".format(error))
         # reverting changes because of exception
         cursor.rollback()
         result['result'] = 'failed'
-        result['valid'] = 2
-    finally:
+        result['row_affected'] = cursor.rowcount
+        result['valid'] = 0
 
-        cursor.close()
-        result['result'] = 'success'
-        result['valid'] = 1
     cursor.close()
     return result
 
