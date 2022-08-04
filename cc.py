@@ -1694,7 +1694,7 @@ def siskamtibmas_create():
 
 
 
-    query = "INSERT INTO siskambtibmas (no_laporan, tgl_laporan) VALUES (%s, %s)"
+    query = "INSERT INTO siskamtibmas (no_laporan, tgl_laporan) VALUES (%s, %s)"
     cursor.execute(query, (no_laporan, tgl_laporan,))
 
     result = dict()
