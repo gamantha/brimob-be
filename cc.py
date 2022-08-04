@@ -1625,10 +1625,12 @@ def siap_gerak_update():
     siap_gerak_id = request.json.get('siap_gerak_id')
     title = request.json.get('title')
     tanggal_laporan = request.json.get('tanggal_laporan')
+    notes1 = request.json.get('notes1')
+    notes2 = request.json.get('notes2')
 
 
-    query = "UPDATE siap_gerak set title = %s, tanggal_laporan = %s where id = %s"
-    cursor.execute(query, (title,tanggal_laporan,siap_gerak_id,))
+    query = "UPDATE siap_gerak set title = %s, tanggal_laporan = %s, notes1 = %s, notes2 = %s where id = %s"
+    cursor.execute(query, (title,tanggal_laporan,siap_gerak_id,notes1, notes2))
 
 
     result = dict()
