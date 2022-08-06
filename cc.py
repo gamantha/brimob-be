@@ -1786,7 +1786,10 @@ def siskamtibmas_read():
     db = get_db()
     cursor = db.cursor(dictionary=True)
     id = request.json.get('id')
-    query = "SELECT id, no_laporan, tgl_laporan, approved_by, date_submitted, date_approved, status, dasar, lainlain,penutup, meta from siskamtibmas WHERE id = %s"
+    query = "SELECT siskamtibmas.id, no_laporan, tgl_laporan, approved_by, date_submitted, date_approved, status, dasar, lainlain,penutup, meta, " \
+            "data_siskamtibmas.region_id, region.region_name, region.image, data_siskamtibmas.a, data_siskamtibmas.b, data_siskamtibmas.c, data_siskamtibmas.d, " \
+            "data_siskamtibmas.e, data_siskamtibmas.f, data_siskamtibmas.g, data_siskamtibmas.h, data_siskamtibmas.i from siskamtibmas " \
+            "left join data_siskamtibmas on siskamtibmas_id = siskamtibmas.id left join region on data_siskamtibmas.region_id = region.id WHERE siskamtibmas.id = %s"
     cursor.execute(query, (str(id),))
     record = cursor.fetchone()
     cursor.close()
