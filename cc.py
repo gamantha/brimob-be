@@ -1794,6 +1794,20 @@ def siskamtibmas_read():
     result = record
     return jsonify(result)
 
+@cc_blueprint.route('/siskamtibmas_read_all', methods=["POST"])
+def siskamtibmas_read_all():
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    offset = request.json.get('offset')
+    limit = request.json.get('limit')
+    query = "SELECT id, no_laporan, tgl_laporan, approved_by, date_submitted, date_approved, status, dasar, lainlain,penutup, meta from siskamtibmas order by id desc limit %s, %s"
+    cursor.execute(query,(offset,limit,))
+    record = cursor.fetchall()
+    cursor.close()
+    result = dict()
+    result = record
+    return jsonify(result)
+
 
 ################### DATA PIMPINAN CRUD #################################################
 
