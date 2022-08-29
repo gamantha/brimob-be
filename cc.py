@@ -1682,6 +1682,91 @@ def siap_gerak_approve():
 
 
 
+################### DATA SISKAMTIBMAS CRUD ############################################
+
+@cc_blueprint.route('/data_siskamtibmas_create', methods=["POST"])
+def data_siskamtibmas_create():
+    print("inside data siskamtimbas create")
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    siskamtibmas_id = request.json.get('siskamtibmas_id')
+    region_id = request.json.get('region_id')
+    a = request.json.get('a')
+    b = request.json.get('b')
+    c = request.json.get('c')
+    d = request.json.get('d')
+    e = request.json.get('e')
+    f = request.json.get('f')
+    g = request.json.get('g')
+    h = request.json.get('h')
+    i = request.json.get('i')
+
+
+    query = "INSERT INTO data_siskamtibmas (siskamtibmas_id, region_id, a, b, c, d, e, f ,g, h, i) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+
+    result = dict()
+    try:
+        cursor.execute(query, (siskamtibmas_id, region_id, a, b, c, d, e, f, g, h, i))
+        result['result'] = 'success'
+        result['valid'] = 1
+        result['rowcount'] = cursor.rowcount
+
+    except:
+        print("Failed to update record to database rollback: {}".format(mysql.Error))
+        # reverting changes because of exception
+        # cursor.rollback()
+        result['result'] = 'failed'
+        result['valid'] = 0
+        result['rowcount'] = cursor.rowcount
+
+    cursor.close()
+    return result
+
+
+
+@cc_blueprint.route('/data_siskamtibmas_update', methods=["POST"])
+def data_siskamtibmas_update():
+    print("inside data siskamtimbas update")
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    siskamtibmas_id = request.json.get('siskamtibmas_id')
+    region_id = request.json.get('region_id')
+    a = request.json.get('a')
+    b = request.json.get('b')
+    c = request.json.get('c')
+    d = request.json.get('d')
+    e = request.json.get('e')
+    f = request.json.get('f')
+    g = request.json.get('g')
+    h = request.json.get('h')
+    i = request.json.get('i')
+
+
+    query = "UPDATE data_siskamtibmas set region_id = %s, a = %s, b = %s, c = %s, d = %s, e = %s, f = %s, g = %s,h = %s,i = %s where siskamtibmas_id = %s"
+
+    cursor.execute(query, (region_id, a, b, c, d, e, f, g, h, i, siskamtibmas_id))
+    result = dict()
+    try:
+        db.commit()
+    except mysql.connector.Error as error:
+        print("Failed to update record to database rollback: {}".format(error))
+        # reverting changes because of exception
+        cursor.rollback()
+        result['result'] = 'failed'
+        result['valid'] = 0
+        result['rowcount'] = cursor.rowcount
+    finally:
+        cursor.close()
+        result['result'] = 'success'
+        result['valid'] = 1
+        result['rowcount'] = cursor.rowcount
+    cursor.close()
+    return result
+
+
+
+
+
 ################### SISKAMTIBMAS CRUD #################################################
 
 
