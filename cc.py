@@ -1723,7 +1723,6 @@ def data_siskamtibmas_create():
     return result
 
 
-
 @cc_blueprint.route('/data_siskamtibmas_update', methods=["POST"])
 def data_siskamtibmas_update():
     print("inside data siskamtimbas update")
@@ -1742,9 +1741,9 @@ def data_siskamtibmas_update():
     i = request.json.get('i')
 
 
-    query = "UPDATE data_siskamtibmas set region_id = %s, a = %s, b = %s, c = %s, d = %s, e = %s, f = %s, g = %s,h = %s,i = %s where siskamtibmas_id = %s"
+    query = "UPDATE data_siskamtibmas set a = %s, b = %s, c = %s, d = %s, e = %s, f = %s, g = %s,h = %s,i = %s where siskamtibmas_id = %s AND region_id = %s"
 
-    cursor.execute(query, (region_id, a, b, c, d, e, f, g, h, i, siskamtibmas_id))
+    cursor.execute(query, (a, b, c, d, e, f, g, h, i, siskamtibmas_id,region_id,))
     result = dict()
     try:
         db.commit()
@@ -1876,7 +1875,8 @@ def siskamtibmas_read():
             "data_siskamtibmas.e, data_siskamtibmas.f, data_siskamtibmas.g, data_siskamtibmas.h, data_siskamtibmas.i from siskamtibmas " \
             "left join data_siskamtibmas on siskamtibmas_id = siskamtibmas.id left join region on data_siskamtibmas.region_id = region.id WHERE siskamtibmas.id = %s"
     cursor.execute(query, (str(id),))
-    record = cursor.fetchone()
+    record = cursor.fetchall()
+    # print(record)
     cursor.close()
     result = dict()
     result = record
