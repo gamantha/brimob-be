@@ -103,11 +103,11 @@ def tracker():
     hdop = request.args.get("hdop", None)
     altitude = request.args.get("altitude", None)
     speed = request.args.get("speed", None)
-
+    ip = request.remote_addr
     db2 = get_db2()
     cursor = db2.cursor(dictionary=True)
 
-    query = "INSERT INTO tracker_loc (tracker_device_id, lat, lon, hdop, altitude,speed) VALUES (%s, %s, %s, %s, %s, %s)"
+    query = "INSERT INTO tracker_loc (tracker_device_id, lat, lon, hdop, altitude,speed, ip) VALUES (%s, %s, %s, %s, %s, %s, %s)"
     cursor.execute(query, (id, lat, lon, hdop, altitude, speed))
 
     # print("here")
