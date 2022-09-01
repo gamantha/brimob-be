@@ -145,9 +145,9 @@ def get_tracker_devices():
     record = cursor.fetchall()
     result = dict()
     result = record
-    dummylon = float(result[0]['lon']) + float(random.random() * 30)
-    print(dummylon)
-    result[0]['lon'] = dummylon
+    # dummylon = float(result[0]['lon']) + float(random.random() * 30)
+    # print(dummylon)
+    # result[0]['lon'] = dummylon
     return jsonify(result)
 
 
