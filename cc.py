@@ -108,7 +108,7 @@ def tracker():
     cursor = db2.cursor(dictionary=True)
 
     query = "INSERT INTO tracker_loc (tracker_device_id, lat, lon, hdop, altitude,speed, ip) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-    cursor.execute(query, (id, lat, lon, hdop, altitude, speed))
+    cursor.execute(query, (id, lat, lon, hdop, altitude, speed, ip))
 
     # print("here")
     result = dict()
