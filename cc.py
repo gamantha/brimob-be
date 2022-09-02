@@ -1707,6 +1707,15 @@ def data_siskamtibmas_create():
     result = dict()
     try:
         cursor.execute(query, (siskamtibmas_id, region_id, a, b, c, d, e, f, g, h, i))
+        try:
+            db.commit()
+        except mysql.connector.Error as error:
+            print("Failed to update record to database rollback: {}".format(error))
+            # reverting changes because of exception
+            cursor.rollback()
+            result['result'] = 'failed'
+            result['valid'] = 0
+            result['rowcount'] = cursor.rowcount
         result['result'] = 'success'
         result['valid'] = 1
         result['rowcount'] = cursor.rowcount
