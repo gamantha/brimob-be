@@ -173,6 +173,10 @@ def get_tracker_loc():
     query = "SELECT id, tracker_device_id, lat, lon, altitude, hdop, speed FROM tracker_loc WHERE tracker_device_id = %s ORDER BY id DESC"
     cursor.execute(query, (tracker_device_id,))
     record = cursor.fetchone()
+    if (record == None) :
+        return {
+            "message": "no data for that device"
+        }
     return record
 
 
