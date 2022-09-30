@@ -738,41 +738,41 @@ def laporan_filter():
 
 @cc_blueprint.route('/load_video_banner')
 def load_video_banner():
-    # db = get_db()
-    # cursor = db.cursor()
-    # ## defining the Query
-    # query = "SELECT * FROM apps_video_banner WHERE id = '1'"
-    # query2 = "SELECT * FROM app_link_banner WHERE id = '1'"
-    # ## getting records from the table
-    # cursor.execute(query)
-    #
-    # ## fetching all records from the 'cursor' object
-    # # records = cursor.fetchall()
-    # record = cursor.fetchone()
-    # cursor.execute(query2)
-    # record_link = cursor.fetchone()
-    # cursor.close()
+    db = get_db()
+    cursor = db.cursor()
+    ## defining the Query
+    query = "SELECT * FROM apps_video_banner WHERE id = '1'"
+    query2 = "SELECT * FROM app_link_banner WHERE id = '1'"
+    ## getting records from the table
+    cursor.execute(query)
+
+    ## fetching all records from the 'cursor' object
+    # records = cursor.fetchall()
+    record = cursor.fetchone()
+    cursor.execute(query2)
+    record_link = cursor.fetchone()
+    cursor.close()
     ## Showing the data
     # for record in records:
     #     print(record)
     # print(record)
     res = dict()
-    # res['you_1'] = record[1]
-    # res['you_2'] = record[3]
-    # res['you_3'] = record[5]
-    # res['you_tit1'] = record[2]
-    # res['you_tit2'] = record[4]
-    # res['you_tit3'] = record[6]
-    # res['banner_twitter'] = record[7]
-    # res['banner_news'] = record[8]
-    # res['twitter_embed'] = record[9]
-    # res['news_embed'] = record[10]
-    # res['link_title'] = record_link[1]
-    # res['link_banner'] = record_link[2]
-    # res['link_reff'] = record_link[3]
-    # res['link_title_2'] = record_link[4]
-    # res['link_banner_2'] = record_link[5]
-    # res['link_reff_2'] = record_link[6]
+    res['you_1'] = record[1]
+    res['you_2'] = record[3]
+    res['you_3'] = record[5]
+    res['you_tit1'] = record[2]
+    res['you_tit2'] = record[4]
+    res['you_tit3'] = record[6]
+    res['banner_twitter'] = record[7]
+    res['banner_news'] = record[8]
+    res['twitter_embed'] = record[9]
+    res['news_embed'] = record[10]
+    res['link_title'] = record_link[1]
+    res['link_banner'] = record_link[2]
+    res['link_reff'] = record_link[3]
+    res['link_title_2'] = record_link[4]
+    res['link_banner_2'] = record_link[5]
+    res['link_reff_2'] = record_link[6]
     return json.dumps(res)
 
 
