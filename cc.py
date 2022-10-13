@@ -1520,8 +1520,9 @@ def siap_gerak_delete():
 @cc_blueprint.route('/data_siap_gerak_create', methods=["POST"])
 def data_siap_gerak_create():
     db = get_db()
+    print("data_siap_gerak_create")
     cursor = db.cursor(dictionary=True)
-    siap_gerak_id = request.json.get('siap_gerak_id')
+    tanggal = request.json.get('tanggal')
     region_id = request.json.get('region_id')
     region_custom_name = request.json.get('region_custom_name')
     jumlah_riil = request.json.get('jumlah_riil')
@@ -1531,10 +1532,10 @@ def data_siap_gerak_create():
     jumlah_cadangan = request.json.get('jumlah_cadangan')
     keterangan = request.json.get('keterangan')
 
-
-    query = "INSERT INTO data_siap_gerak (siap_gerak_id, region_id, region_custom_name, jumlah_riil, jumlah_pelaksana_tugas, jumlah_siap_opsnal, siap_opsnal, jumlah_cadangan, keterangan) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-    cursor.execute(query, (siap_gerak_id,region_id,region_custom_name, jumlah_riil, jumlah_pelaksana_tugas,jumlah_siap_opsnal, siap_opsnal, jumlah_cadangan,keterangan,))
-
+    print("before")
+    query = "INSERT INTO data_siap_gerak (tanggal, region_id, region_custom_name, jumlah_riil, jumlah_pelaksana_tugas, jumlah_siap_opsnal, siap_opsnal, jumlah_cadangan, keterangan) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    cursor.execute(query, (tanggal,region_id,region_custom_name, jumlah_riil, jumlah_pelaksana_tugas,jumlah_siap_opsnal, siap_opsnal, jumlah_cadangan,keterangan,))
+    print("after")
     result = dict()
     try:
         db.commit()
