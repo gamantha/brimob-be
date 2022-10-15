@@ -1586,10 +1586,11 @@ def data_siap_gerak_delete():
 @cc_blueprint.route('/data_siap_gerak_region', methods=["POST"])
 def data_siap_gerak_region():
     db = get_db()
+
     cursor = db.cursor(dictionary=True)
     region_id = request.json.get('region_id')
 
-    query = "select data_siap_gerak where region_id = %s "
+    query = "select id, tanggal, region_id, region_custom_name, jumlah_riil, jumlah_pelaksana_tugas, jumlah_siap_opsnal, siap_opsnal, jumlah_cadangan, keterangan from data_siap_gerak where region_id = %s "
     cursor.execute(query, (region_id,))
     record = cursor.fetchall()
     return jsonify(record)
