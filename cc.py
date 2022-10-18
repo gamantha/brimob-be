@@ -1481,7 +1481,18 @@ def siap_gerak_create():
     notes2 = request.json.get('notes2')
     tanggal_laporan = request.json.get('tanggal_laporan')
 
+    result = dict()
+    query = "SELECT * FROM siap_gerak WHERE tanggal_laporan = %s"
+    cursor.execute(query, (tanggal_laporan,))
+    rows = cursor.fetchall()
 
+    print(len(rows))
+
+    if (len(rows) > 0) :
+        cursor.close()
+        result['result'] = 'data di tanggal ini sudah tersedia'
+        result['valid'] = 0
+        return result
 
     query = "INSERT INTO siap_gerak (tanggal_laporan, notes1, notes2) VALUES (%s, %s, %s)"
     cursor.execute(query, (tanggal_laporan, notes1, notes2,))
