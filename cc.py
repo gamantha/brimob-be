@@ -1434,7 +1434,21 @@ def siap_gerak_read():
 
     return jsonify(record)
 
+@cc_blueprint.route('/siap_gerak_read_bydate', methods=["POST"])
+def siap_gerak_read_bydate():
+    db = get_db()
+    tanggal_laporan = request.json.get('tanggal_laporan')
+    cursor = db.cursor(dictionary=True)
+    query = "select id,title, tanggal_laporan, notes1, notes2, status, approved, approved_by, approved_at, `user`.username " \
+            "from siap_gerak left join user on approved_by = user.iduser where tanggal_laporan = %s order by tanggal_laporan DESC"
+    cursor.execute(query,(tanggal_laporan,))
+    record = cursor.fetchall()
+    cursor.close()
+    result = dict()
+    # print(record)
+    temp = dict()
 
+    return jsonify(record)
 
 
 @cc_blueprint.route('/data_siap_gerak_read', methods=["POST"])
@@ -1459,7 +1473,7 @@ def data_siap_gerak_read_bydate():
     tanggal = request.json.get('tanggal')
     cursor = db.cursor(dictionary=True)
     query = "select data_siap_gerak.id, tanggal,data_siap_gerak.siap_gerak_id, region_id, region.region_name, region_custom_name, jumlah_riil, jumlah_pelaksana_tugas, jumlah_siap_opsnal, siap_opsnal, jumlah_cadangan, keterangan " \
-            "from data_siap_gerak left join region on region.id = data_siap_gerak.region_id where tanggal = %s"
+            "from data_siap_gerak left join region on region.id = data_siap_gerak.region_id where tanggal = %s order by tanggal DESC"
     cursor.execute(query,(tanggal,))
     record = cursor.fetchall()
     cursor.close()
