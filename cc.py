@@ -1615,6 +1615,7 @@ def data_siap_gerak_region():
 def data_siap_gerak_update():
     db = get_db()
     cursor = db.cursor(dictionary=True)
+    data_siap_gerak_id = request.json.get('data_siap_gerak_id')
     region_id = request.json.get('region_id')
     region_custom_name = request.json.get('region_custom_name')
     jumlah_riil = request.json.get('jumlah_riil')
