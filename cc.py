@@ -1624,10 +1624,11 @@ def data_siap_gerak_update():
     siap_opsnal = request.json.get('siap_opsnal')
     jumlah_cadangan = request.json.get('jumlah_cadangan')
     keterangan = request.json.get('keterangan')
+    status = request.json.get('status')
 
-    query = "UPDATE data_siap_gerak set region_id = %s, region_custom_name = %s, jumlah_riil = %s, jumlah_pelaksana_tugas = %s, jumlah_siap_opsnal = %s, siap_opsnal = %s, jumlah_cadangan = %s, keterangan = %s " \
+    query = "UPDATE data_siap_gerak set region_id = %s, region_custom_name = %s, jumlah_riil = %s, jumlah_pelaksana_tugas = %s, jumlah_siap_opsnal = %s, siap_opsnal = %s, jumlah_cadangan = %s, keterangan = %s, status = %s " \
             "where id = %s"
-    cursor.execute(query, (region_id,region_custom_name,jumlah_riil,jumlah_pelaksana_tugas,jumlah_siap_opsnal,siap_opsnal,jumlah_cadangan,keterangan,data_siap_gerak_id,))
+    cursor.execute(query, (region_id,region_custom_name,jumlah_riil,jumlah_pelaksana_tugas,jumlah_siap_opsnal,siap_opsnal,jumlah_cadangan,keterangan,data_siap_gerak_id,status,))
 
     # print("here")
     result = dict()
