@@ -1534,10 +1534,24 @@ def data_siap_gerak_create():
     keterangan = request.json.get('keterangan')
 
     print("before")
+    result = dict()
+    query = "SELECT * FROM data_siap_gerak WHERE tanggal = %s AND region_id = %s"
+    cursor.execute(query, (tanggal,region_id,))
+    rows = cursor.fetchall()
+
+    print(len(rows))
+
+    if (len(rows) > 0) :
+        cursor.close()
+        result['result'] = 'failed'
+        result['valid'] = 0
+        return result
+
+
     query = "INSERT INTO data_siap_gerak (tanggal, region_id, region_custom_name, jumlah_riil, jumlah_pelaksana_tugas, jumlah_siap_opsnal, siap_opsnal, jumlah_cadangan, keterangan) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
     cursor.execute(query, (tanggal,region_id,region_custom_name, jumlah_riil, jumlah_pelaksana_tugas,jumlah_siap_opsnal, siap_opsnal, jumlah_cadangan,keterangan,))
     print("after")
-    result = dict()
+
     try:
         db.commit()
     except mysql.connector.Error as error:
