@@ -1461,13 +1461,14 @@ def data_siap_gerak_read():
 def siap_gerak_create():
     db = get_db()
     cursor = db.cursor(dictionary=True)
-    title = request.json.get('title')
+    notes1 = request.json.get('notes1')
+    notes2 = request.json.get('notes2')
     tanggal_laporan = request.json.get('tanggal_laporan')
 
 
 
-    query = "INSERT INTO siap_gerak (title, tanggal_laporan) VALUES (%s, %s)"
-    cursor.execute(query, (title,tanggal_laporan,))
+    query = "INSERT INTO siap_gerak (tanggal_laporan, notes1, notes2) VALUES (%s, %s, %s)"
+    cursor.execute(query, (tanggal_laporan, notes1, notes2,))
 
     result = dict()
     try:
