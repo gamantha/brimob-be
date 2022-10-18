@@ -1621,7 +1621,7 @@ def data_siap_gerak_region():
     cursor = db.cursor(dictionary=True)
     region_id = request.json.get('region_id')
 
-    query = "select data_siap_gerak.id, tanggal, region_id, region.region_name, region_custom_name, jumlah_riil, jumlah_pelaksana_tugas, jumlah_siap_opsnal, siap_opsnal, jumlah_cadangan, keterangan, data_siap_gerak.status from data_siap_gerak left join region on region_id = region.id where region_id = %s "
+    query = "select data_siap_gerak.id, tanggal, region_id, region.region_name, region_custom_name, jumlah_riil, jumlah_pelaksana_tugas, jumlah_siap_opsnal, siap_opsnal, jumlah_cadangan, keterangan, data_siap_gerak.status from data_siap_gerak left join region on region_id = region.id where region_id = %s order by data_siap_gerak.id desc"
     cursor.execute(query, (region_id,))
     record = cursor.fetchall()
     return jsonify(record)
