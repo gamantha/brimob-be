@@ -1543,7 +1543,7 @@ def data_siap_gerak_create():
 
     if (len(rows) > 0) :
         cursor.close()
-        result['result'] = 'failed'
+        result['result'] = 'data di tanggal ini sudah tersedia'
         result['valid'] = 0
         return result
 
