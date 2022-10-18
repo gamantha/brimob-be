@@ -1453,6 +1453,22 @@ def data_siap_gerak_read():
 
     return jsonify(record)
 
+@cc_blueprint.route('/data_siap_gerak_read_bydate', methods=["POST"])
+def data_siap_gerak_read_bydate():
+    db = get_db()
+    tanggal = request.json.get('tanggal')
+    cursor = db.cursor(dictionary=True)
+    query = "select data_siap_gerak.id, tanggal,data_siap_gerak.siap_gerak_id, region_id, region.region_name, region_custom_name, jumlah_riil, jumlah_pelaksana_tugas, jumlah_siap_opsnal, siap_opsnal, jumlah_cadangan, keterangan " \
+            "from data_siap_gerak left join region on region.id = data_siap_gerak.region_id where tanggal = %s"
+    cursor.execute(query,(tanggal,))
+    record = cursor.fetchall()
+    cursor.close()
+    result = dict()
+    # print(record)
+    temp = dict()
+
+    return jsonify(record)
+
 
 
 
