@@ -1456,7 +1456,7 @@ def data_siap_gerak_read():
     db = get_db()
     siap_gerak_id = request.json.get('siap_gerak_id')
     cursor = db.cursor(dictionary=True)
-    query = "select data_siap_gerak.id, data_siap_gerak.siap_gerak_id, region_id, region.region_name, region_custom_name, jumlah_riil, jumlah_pelaksana_tugas, jumlah_siap_opsnal, siap_opsnal, jumlah_cadangan, keterangan " \
+    query = "select data_siap_gerak.id, data_siap_gerak.siap_gerak_id, region_id, region.region_name, region_custom_name, jumlah_riil, jumlah_pelaksana_tugas, jumlah_siap_opsnal, siap_opsnal, jumlah_cadangan, keterangan, status " \
             "from data_siap_gerak left join region on region.id = data_siap_gerak.region_id where siap_gerak_id = %s"
     cursor.execute(query,(siap_gerak_id,))
     record = cursor.fetchall()
@@ -1472,7 +1472,7 @@ def data_siap_gerak_read_bydate():
     db = get_db()
     tanggal = request.json.get('tanggal')
     cursor = db.cursor(dictionary=True)
-    query = "select data_siap_gerak.id, tanggal,data_siap_gerak.siap_gerak_id, region_id, region.region_name, region_custom_name, jumlah_riil, jumlah_pelaksana_tugas, jumlah_siap_opsnal, siap_opsnal, jumlah_cadangan, keterangan " \
+    query = "select data_siap_gerak.id, tanggal,data_siap_gerak.siap_gerak_id, region_id, region.region_name, region_custom_name, jumlah_riil, jumlah_pelaksana_tugas, jumlah_siap_opsnal, siap_opsnal, jumlah_cadangan, keterangan, status " \
             "from data_siap_gerak left join region on region.id = data_siap_gerak.region_id where tanggal = %s order by tanggal DESC"
     cursor.execute(query,(tanggal,))
     record = cursor.fetchall()
