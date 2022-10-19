@@ -1767,6 +1767,7 @@ def data_siskamtibmas_create():
     cursor = db.cursor(dictionary=True)
     siskamtibmas_id = request.json.get('siskamtibmas_id')
     region_id = request.json.get('region_id')
+    tanggal = request.json.get('tanggal')
     a = request.json.get('a')
     b = request.json.get('b')
     c = request.json.get('c')
@@ -1778,11 +1779,27 @@ def data_siskamtibmas_create():
     i = request.json.get('i')
 
 
-    query = "INSERT INTO data_siskamtibmas (siskamtibmas_id, region_id, a, b, c, d, e, f ,g, h, i) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    print("before")
+    result = dict()
+    query = "SELECT * FROM data_siskamtibmas WHERE tanggal = %s AND region_id = %s"
+    cursor.execute(query, (tanggal,region_id,))
+    rows = cursor.fetchall()
+
+    print(len(rows))
+
+    if (len(rows) > 0) :
+        cursor.close()
+        result['result'] = 'data di tanggal ini sudah tersedia'
+        result['valid'] = 0
+        return result
+
+
+
+    query = "INSERT INTO data_siskamtibmas (tanggal, siskamtibmas_id, region_id, a, b, c, d, e, f ,g, h, i) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
     result = dict()
     try:
-        cursor.execute(query, (siskamtibmas_id, region_id, a, b, c, d, e, f, g, h, i))
+        cursor.execute(query, (tanggal, siskamtibmas_id, region_id, a, b, c, d, e, f, g, h, i))
         try:
             db.commit()
         except mysql.connector.Error as error:
