@@ -2261,6 +2261,52 @@ def data_pimpinan_delete():
     return result
 
 
+######################## TEMPLATE SISKAMTIBMAS ################################
+
+
+@cc_blueprint.route('/template_siskamtibmas_read', methods=["GET"])
+def template_siskamtibmas_read():
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    query = "select * from template_siskamtibmas"
+    cursor.execute(query,)
+    record = cursor.fetchone()
+    cursor.close()
+    result = dict()
+    # print(record)
+    temp = dict()
+
+    return jsonify(record)
+
+@cc_blueprint.route('/template_siskamtibmas_update', methods=["POST"])
+def template_siskamtibmas_update():
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    dasar = request.json.get('dasar')
+    lainlain = request.json.get('lainlain')
+    penutup = request.json.get('penutup')
+
+    query = "UPDATE template_siskamtibmas set dasar = %s, lainlain = %s, penutup = %s"
+    cursor.execute(query, (dasar, lainlain, penutup,))
+
+    result = dict()
+    try:
+        db.commit()
+    except mysql.connector.Error as error:
+        print("Failed to update record to database rollback: {}".format(error))
+        # reverting changes because of exception
+        cursor.rollback()
+        result['result'] = 'failed'
+        result['valid'] = 2
+    finally:
+
+        cursor.close()
+        result['result'] = 'success'
+        result['valid'] = 1
+    cursor.close()
+    return result
+
+
 
 
 ################### REGION CRUD #################################################
