@@ -1765,7 +1765,7 @@ def data_siskamtibmas_create():
     print("inside data siskamtimbas create")
     db = get_db()
     cursor = db.cursor(dictionary=True)
-    siskamtibmas_id = request.json.get('siskamtibmas_id')
+    # siskamtibmas_id = request.json.get('siskamtibmas_id')
     region_id = request.json.get('region_id')
     tanggal = request.json.get('tanggal')
     a = request.json.get('a')
@@ -1795,11 +1795,11 @@ def data_siskamtibmas_create():
 
 
 
-    query = "INSERT INTO data_siskamtibmas (tanggal, siskamtibmas_id, region_id, a, b, c, d, e, f ,g, h, i) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    query = "INSERT INTO data_siskamtibmas (tanggal, region_id, a, b, c, d, e, f ,g, h, i) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
     result = dict()
     try:
-        cursor.execute(query, (tanggal, siskamtibmas_id, region_id, a, b, c, d, e, f, g, h, i))
+        cursor.execute(query, (tanggal, region_id, a, b, c, d, e, f, g, h, i))
         try:
             db.commit()
         except mysql.connector.Error as error:
@@ -1830,8 +1830,8 @@ def data_siskamtibmas_update():
     print("inside data siskamtimbas update")
     db = get_db()
     cursor = db.cursor(dictionary=True)
-    siskamtibmas_id = request.json.get('siskamtibmas_id')
-    region_id = request.json.get('region_id')
+    data_siskamtibmas_id = request.json.get('data_siskamtibmas_id')
+    # region_id = request.json.get('region_id')
     a = request.json.get('a')
     b = request.json.get('b')
     c = request.json.get('c')
@@ -1843,9 +1843,9 @@ def data_siskamtibmas_update():
     i = request.json.get('i')
 
 
-    query = "UPDATE data_siskamtibmas set a = %s, b = %s, c = %s, d = %s, e = %s, f = %s, g = %s,h = %s,i = %s where siskamtibmas_id = %s AND region_id = %s"
+    query = "UPDATE data_siskamtibmas set a = %s, b = %s, c = %s, d = %s, e = %s, f = %s, g = %s,h = %s,i = %s where id = %s"
 
-    cursor.execute(query, (a, b, c, d, e, f, g, h, i, siskamtibmas_id,region_id,))
+    cursor.execute(query, (a, b, c, d, e, f, g, h, i, data_siskamtibmas_id,))
     result = dict()
     try:
         db.commit()
