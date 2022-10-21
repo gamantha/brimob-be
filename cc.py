@@ -1871,8 +1871,8 @@ def data_siskamtibmas_read_bydate():
     db = get_db()
     tanggal = request.json.get('tanggal')
     cursor = db.cursor(dictionary=True)
-    query = "select id,tanggal,siskamtibmas_id, region_id,region.region_name, a, b, c, d, e, f, g, h, i, status " \
-            "from data_siskamtibmas left join region on region_id = region.id where tanggal = %s order by tanggal DESC"
+    query = "select data_siskamtibmas.id,tanggal,siskamtibmas_id, region_id,region.region_name, a, b, c, d, e, f, g, h, i, status " \
+            "from data_siskamtibmas left join region on data_siskamtibmas.region_id = region.id where tanggal = %s order by tanggal DESC"
     cursor.execute(query,(tanggal,))
     record = cursor.fetchall()
     cursor.close()
@@ -1887,9 +1887,11 @@ def data_siskamtibmas_read_region():
     db = get_db()
     region_id = request.json.get('region_id')
     cursor = db.cursor(dictionary=True)
-    query = "select id,tanggal,siskamtibmas_id, region_id,region.region_name, a, b, c, d, e, f, g, h, i, status " \
-            "from data_siskamtibmas left join region on region_id = region.id where region_id = %s order by tanggal DESC"
+
+    query = "select data_siskamtibmas.id,tanggal,siskamtibmas_id, region_id,region.region_name, a, b, c, d, e, f, g, h, i, status " \
+            "from data_siskamtibmas left join region on data_siskamtibmas.region_id = region.id where region_id = %s order by tanggal DESC"
     cursor.execute(query,(region_id,))
+
     record = cursor.fetchall()
     cursor.close()
     result = dict()
