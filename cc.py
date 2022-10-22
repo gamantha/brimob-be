@@ -1849,6 +1849,9 @@ def data_siskamtibmas_update():
     result = dict()
     try:
         db.commit()
+        result['result'] = 'success'
+        result['valid'] = 1
+        result['rowcount'] = cursor.rowcount
     except mysql.connector.Error as error:
         print("Failed to update record to database rollback: {}".format(error))
         # reverting changes because of exception
@@ -1856,15 +1859,40 @@ def data_siskamtibmas_update():
         result['result'] = 'failed'
         result['valid'] = 0
         result['rowcount'] = cursor.rowcount
-    finally:
-        cursor.close()
-        result['result'] = 'success'
-        result['valid'] = 1
-        result['rowcount'] = cursor.rowcount
     cursor.close()
     return result
 
 
+
+@cc_blueprint.route('/data_siskamtibmas_delete', methods=["DELETE"])
+def data_siskamtibmas_delete():
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    id = request.json.get('id')
+
+    query = "DELETE FROM data_siskamtibmas where id = %s"
+    cursor.execute(query, (id,))
+
+
+    result = dict()
+    try:
+        db.commit()
+        result['row_affected'] = cursor.rowcount
+        result['result'] = 'success'
+        result['valid'] = 1
+    except mysql.connector.Error as error:
+        print("Failed to update record to database rollback: {}".format(error))
+        # reverting changes because of exception
+        cursor.rollback()
+        result['result'] = 'failed'
+        result['row_affected'] = cursor.rowcount
+        result['valid'] = 0
+    finally:
+
+        cursor.close()
+
+    cursor.close()
+    return result
 
 @cc_blueprint.route('/data_siskamtibmas_read_bydate', methods=["POST"])
 def data_siskamtibmas_read_bydate():
@@ -1910,10 +1938,14 @@ def siskamtibmas_create():
     cursor = db.cursor(dictionary=True)
     no_laporan = request.json.get('no_laporan')
     tgl_laporan = request.json.get('tgl_laporan')
+    dasar = request.json.get('dasar')
+    lainlain = request.json.get('lainlain')
+    penutup = request.json.get('penutup')
+    meta = request.json.get('meta')
 
 
-    query = "INSERT INTO siskamtibmas (no_laporan, tgl_laporan) VALUES (%s, %s)"
-    cursor.execute(query, (no_laporan, tgl_laporan,))
+    query = "INSERT INTO siskamtibmas (no_laporan, tgl_laporan, dasar, lainlain,penutup, meta) VALUES (%s, %s, %s, %s, %s, %s)"
+    cursor.execute(query, (no_laporan, tgl_laporan, dasar, lainlain, penutup, meta,))
     print("isnide consulta")
     result = dict()
     try:
@@ -1939,18 +1971,18 @@ def siskamtibmas_update():
     db = get_db()
     cursor = db.cursor(dictionary=True)
     id = request.json.get('id')
-    no_laporan = request.json.get('no_laporan')
-    tgl_laporan = request.json.get('tgl_laporan')
-
-    status = request.json.get('status')
-    dasar = request.json.get('dasar')
+    # no_laporan = request.json.get('no_laporan')
+    # tgl_laporan = request.json.get('tgl_laporan')
+    #
+    # status = request.json.get('status')
+    # dasar = request.json.get('dasar')
     lainlain = request.json.get('lainlain')
-    penutup = request.json.get('penutup')
-    meta = request.json.get('meta')
+    # penutup = request.json.get('penutup')
+    # meta = request.json.get('meta')
 
 
-    query = "UPDATE siskamtibmas set no_laporan = %s, tgl_laporan = %s, status = %s, dasar = %s, lainlain = %s, penutup = %s, meta = %s where id = %s"
-    cursor.execute(query, (no_laporan,tgl_laporan,status,dasar,lainlain,penutup,meta,id,))
+    query = "UPDATE siskamtibmas set lainlain = %s where id = %s"
+    cursor.execute(query, (lainlain,id,))
 
     print("here")
     result = dict()
