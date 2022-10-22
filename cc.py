@@ -1795,7 +1795,7 @@ def data_siskamtibmas_create():
 
 
 
-    query = "INSERT INTO data_siskamtibmas (tanggal, region_id, a, b, c, d, e, f ,g, h, i) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    query = "INSERT INTO data_siskamtibmas (tanggal, region_id, a, b, c, d, e, f ,g, h, i) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
     result = dict()
     try:
