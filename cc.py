@@ -1831,7 +1831,7 @@ def data_siskamtibmas_update():
     db = get_db()
     cursor = db.cursor(dictionary=True)
     data_siskamtibmas_id = request.json.get('data_siskamtibmas_id')
-    # region_id = request.json.get('region_id')
+    status = request.json.get('status')
     a = request.json.get('a')
     b = request.json.get('b')
     c = request.json.get('c')
@@ -1843,9 +1843,9 @@ def data_siskamtibmas_update():
     i = request.json.get('i')
 
 
-    query = "UPDATE data_siskamtibmas set a = %s, b = %s, c = %s, d = %s, e = %s, f = %s, g = %s,h = %s,i = %s where id = %s"
+    query = "UPDATE data_siskamtibmas set a = %s, b = %s, c = %s, d = %s, e = %s, f = %s, g = %s,h = %s,i = %s, status = %s where id = %s"
 
-    cursor.execute(query, (a, b, c, d, e, f, g, h, i, data_siskamtibmas_id,))
+    cursor.execute(query, (a, b, c, d, e, f, g, h, i, status, data_siskamtibmas_id,))
     result = dict()
     try:
         db.commit()
