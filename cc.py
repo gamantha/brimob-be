@@ -1944,6 +1944,21 @@ def siskamtibmas_create():
     meta = request.json.get('meta')
 
 
+    print("before")
+    result = dict()
+    query = "SELECT * FROM siskamtibmas WHERE tgl_laporan = %s"
+    cursor.execute(query, (tgl_laporan,))
+    rows = cursor.fetchall()
+
+    print(len(rows))
+
+    if (len(rows) > 0) :
+        cursor.close()
+        result['result'] = 'data di tanggal ini sudah tersedia'
+        result['valid'] = 0
+        return result
+
+
     query = "INSERT INTO siskamtibmas (no_laporan, tgl_laporan, dasar, lainlain,penutup, meta) VALUES (%s, %s, %s, %s, %s, %s)"
     cursor.execute(query, (no_laporan, tgl_laporan, dasar, lainlain, penutup, meta,))
     print("isnide consulta")
