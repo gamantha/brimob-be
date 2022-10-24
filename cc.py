@@ -2186,6 +2186,7 @@ def data_pimpinan_create():
     cursor = db.cursor(dictionary=True)
     region_id = request.json.get('region_id')
     department_id = request.json.get('department_id')
+    subdepartment = request.json.get('subdepartment')
     komandan_nama = request.json.get('komandan_nama')
     komandan_telp = request.json.get('komandan_telp')
     komandan_email = request.json.get('komandan_email')
@@ -2199,9 +2200,9 @@ def data_pimpinan_create():
     order = request.json.get('order')
 
 
-    query = "INSERT INTO data_pimpinan (region_id, department_id, komandan_nama, komandan_telp, komandan_email, wakil_nama, wakil_telp, wakil_email, alamat_lengkap, link_titik_lokasi, " \
-            "lat, lon) VALUES (%s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s)"
-    cursor.execute(query, (region_id,department_id,komandan_nama,komandan_telp,komandan_email,wakil_nama, wakil_telp, wakil_email, alamat_lengkap, link_titik_lokasi, lat, lon,))
+    query = "INSERT INTO data_pimpinan (region_id, department_id, subdepartment, komandan_nama, komandan_telp, komandan_email, wakil_nama, wakil_telp, wakil_email, alamat_lengkap, link_titik_lokasi, " \
+            "lat, lon) VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s)"
+    cursor.execute(query, (region_id,department_id,subdepartment,komandan_nama,komandan_telp,komandan_email,wakil_nama, wakil_telp, wakil_email, alamat_lengkap, link_titik_lokasi, lat, lon,))
 
     result = dict()
     try:
@@ -2228,6 +2229,7 @@ def data_pimpinan_update():
     data_pimpinan_id = request.json.get('data_pimpinan_id')
     region_id = request.json.get('region_id')
     department_id = request.json.get('department_id')
+    subdepartment = request.json.get('subdepartment')
     komandan_nama = request.json.get('komandan_nama')
     komandan_telp = request.json.get('komandan_telp')
     komandan_email = request.json.get('komandan_email')
@@ -2240,9 +2242,9 @@ def data_pimpinan_update():
     lon = request.json.get('lon')
     order = request.json.get('order')
 
-    query = "UPDATE data_pimpinan set region_id = %s, department_id = %s, komandan_nama = %s, komandan_telp = %s, komandan_email = %s, wakil_nama = %s, wakil_telp = %s, wakil_email = %s, " \
+    query = "UPDATE data_pimpinan set region_id = %s, department_id = %s, subdepartment = %s, komandan_nama = %s, komandan_telp = %s, komandan_email = %s, wakil_nama = %s, wakil_telp = %s, wakil_email = %s, " \
             "alamat_lengkap = %s, link_titik_lokasi = %s, lat = %s, lon = %s, data_pimpinan.order = %s where id = %s"
-    cursor.execute(query, (region_id,department_id,komandan_nama,komandan_telp,komandan_email,wakil_nama,wakil_telp,wakil_email,alamat_lengkap,link_titik_lokasi,lat,lon, order, data_pimpinan_id,))
+    cursor.execute(query, (region_id,department_id,subdepartment,komandan_nama,komandan_telp,komandan_email,wakil_nama,wakil_telp,wakil_email,alamat_lengkap,link_titik_lokasi,lat,lon, order, data_pimpinan_id,))
 
     # print("here")
     result = dict()
@@ -2268,7 +2270,7 @@ def data_pimpinan_read():
     db = get_db()
     cursor = db.cursor(dictionary=True)
     region_id = request.json.get('region_id')
-    query = "SELECT data_pimpinan.id,data_pimpinan.region_id, region.region_name, department_id, department.department_name, department.image, komandan_nama, komandan_telp, " \
+    query = "SELECT data_pimpinan.id,data_pimpinan.region_id, region.region_name, department_id, department.department_name, department.image, subdepartment, komandan_nama, komandan_telp, " \
             "komandan_email, komandan_foto, wakil_nama, wakil_telp, wakil_email, wakil_foto, alamat_lengkap, link_titik_lokasi, lat, lon, data_pimpinan.order " \
             "from data_pimpinan left join department on department.id = data_pimpinan.department_id " \
             "left join region on region.id = data_pimpinan.region_id WHERE data_pimpinan.region_id = %s"
