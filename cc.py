@@ -106,9 +106,10 @@ def tracker():
     ip = request.remote_addr
     db2 = get_db2()
     cursor = db2.cursor(dictionary=True)
+    timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
 
-    query = "INSERT INTO tracker_loc (tracker_device_id, lat, lon, hdop, altitude,speed, ip) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-    cursor.execute(query, (id, lat, lon, hdop, altitude, speed, ip))
+    query = "INSERT INTO tracker_loc (tracker_device_id, lat, lon, hdop, altitude,speed, ip, timestamp ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+    cursor.execute(query, (id, lat, lon, hdop, altitude, speed, ip, timestamp))
 
     # print("here")
     result = dict()
