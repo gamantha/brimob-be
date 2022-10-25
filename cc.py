@@ -172,7 +172,7 @@ def get_tracker_loc():
     tracker_device_id = request.json.get("tracker_device_id", None)
     db2 = get_db2()
     cursor = db2.cursor(dictionary=True)
-    query = "SELECT id, tracker_device_id, lat, lon, altitude, hdop, speed FROM tracker_loc WHERE tracker_device_id = %s ORDER BY id DESC"
+    query = "SELECT id, tracker_device_id, lat, lon, altitude, hdop, speed, timestamp FROM tracker_loc WHERE tracker_device_id = %s ORDER BY id DESC"
     cursor.execute(query, (tracker_device_id,))
     record = cursor.fetchone()
     if (record == None) :
