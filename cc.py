@@ -819,6 +819,7 @@ def load_banner_news():
 
 @cc_blueprint.route('/update_banner_news',methods=["POST"])
 def update_banner_news():
+    print("update banner news")
     db = get_db()
     cursor = db.cursor()
     youtube_1 = request.json.get('youtube_1')
@@ -832,13 +833,11 @@ def update_banner_news():
     twitter_embed = request.json.get('twitter_embed')
     news_embed = request.json.get('news_embed')
 
-
     query = "UPDATE apps_video_banner set youtube_1 = %s, youtube_2 = %s, youtube_3 = %s, title_youtube_1 = %s, " \
-            "title_youtube_2 = %s, title_youtube_3 = %s, banner_twitter = %s, banner_news = %s, twitter_embed = %s, " \
+            "title_youtube_2 = %s, title_youtube_3 = %s, banner_twiter = %s, banner_news = %s, twitter_embed = %s, " \
             "news_embed = %s where id = '1'"
-    cursor.execute(query, (youtube_1, youtube_2, youtube_3, title_youtube_1, title_youtube_2, title_youtube_3, banner_twitter,
-                           banner_news, twitter_embed, news_embed))
-
+    cursor.execute(query, (youtube_1, youtube_2, youtube_3, title_youtube_1, title_youtube_2, title_youtube_3, banner_twitter, banner_news, twitter_embed, news_embed,))
+    print(youtube_2)
     result = dict()
     try:
         db.commit()
