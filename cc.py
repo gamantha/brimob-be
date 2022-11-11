@@ -738,6 +738,12 @@ def laporan_filter():
     return jsonify(res)
 
 
+# @cc_blueprint.route('/app_link_banner_update')
+# def app_link_banner_update():
+#     level_user = request.json.get('level_user')
+#     start = request.json.get('start')
+#     regions = request.json.get('regions')
+
 @cc_blueprint.route('/load_video_banner')
 def load_video_banner():
     db = get_db()
@@ -811,6 +817,44 @@ def load_banner_news():
     res2['list'] = res
     return json.dumps(res2)
 
+@cc_blueprint.route('/update_banner_news',methods=["POST"])
+def update_banner_news():
+    db = get_db()
+    cursor = db.cursor()
+    youtube_1 = request.json.get('youtube_1')
+    youtube_2 = request.json.get('youtube_2')
+    youtube_3 = request.json.get('youtube_3')
+    title_youtube_1 = request.json.get('title_youtube_1')
+    title_youtube_2 = request.json.get('title_youtube_3')
+    title_youtube_3 = request.json.get('title_youtube_3')
+    banner_twitter = request.json.get('banner_twitter')
+    banner_news = request.json.get('banner_news')
+    twitter_embed = request.json.get('twitter_embed')
+    news_embed = request.json.get('news_embed')
+
+
+    query = "UPDATE apps_video_banner set youtube_1 = %s, youtube_2 = %s, youtube_3 = %s, title_youtube_1 = %s, " \
+            "title_youtube_2 = %s, title_youtube_3 = %s, banner_twitter = %s, banner_news = %s, twitter_embed = %s, " \
+            "news_embed = %s where id = '1'"
+    cursor.execute(query, (youtube_1, youtube_2, youtube_3, title_youtube_1, title_youtube_2, title_youtube_3, banner_twitter,
+                           banner_news, twitter_embed, news_embed))
+
+    result = dict()
+    try:
+        db.commit()
+    except mysql.connector.Error as error:
+        print("Failed to update record to database rollback: {}".format(error))
+        # reverting changes because of exception
+        cursor.rollback()
+        result['result'] = 'failed'
+        result['valid'] = 2
+    finally:
+
+        cursor.close()
+        result['result'] = 'success'
+        result['valid'] = 1
+    cursor.close()
+    return result
 
 
 # @cc_blueprint.route('/user_get_history', methods=["POST"])
