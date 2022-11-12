@@ -826,7 +826,7 @@ def update_banner_news():
     youtube_2 = request.json.get('youtube_2')
     youtube_3 = request.json.get('youtube_3')
     title_youtube_1 = request.json.get('title_youtube_1')
-    title_youtube_2 = request.json.get('title_youtube_3')
+    title_youtube_2 = request.json.get('title_youtube_2')
     title_youtube_3 = request.json.get('title_youtube_3')
     banner_twitter = request.json.get('banner_twitter')
     banner_news = request.json.get('banner_news')
