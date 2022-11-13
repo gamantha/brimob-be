@@ -25,6 +25,7 @@ from datetime import datetime
 import hashlib
 import bcrypt
 
+import time
 import pdfkit
 
 
@@ -1031,7 +1032,7 @@ def upload_giat_foto():
             return redirect(request.url)
 
         file = request.files['file']
-        laporan_no = request.form['laporan_no']
+        laporan_no = int(time.time())
         laporan_subkategori_id = request.form['laporan_subcategory_id']
         user_id = request.form['user_id']
 
@@ -2925,7 +2926,7 @@ def laporan_giat_list_peruser():
     userid = request.json.get('user_id')
     laporan_subcategory_id = request.json.get('laporan_subcategory_id')
     # status = request.json.get('status')
-    query = "SELECT laporan_giat.id, laporan_giat.user_id, laporan_giat.region_id, region.region_name, laporan_giat.department_id, department.department_name, no_laporan, tgl_laporan, lat_pelapor, long_pelapor, laporan_text, laporan_subcategory_id, subkategori.sub_kategori, image_file FROM laporan_giat " \
+    query = "SELECT laporan_giat.id, laporan_giat.user_id, laporan_giat.region_id, region.region_name, laporan_giat.department_id, department.department_name, no_laporan, tgl_submitted, lat_pelapor, long_pelapor, laporan_text, laporan_subcategory_id, subkategori.sub_kategori, image_file FROM laporan_giat " \
             "LEFT JOIN region ON region.id = laporan_giat.region_id " \
             "LEFT JOIN subkategori ON subkategori.idsubkategori = laporan_giat.laporan_subcategory_id " \
             "LEFT JOIN department ON department.id = laporan_giat.department_id WHERE laporan_giat.user_id = %s AND laporan_giat.laporan_subcategory_id = %s"
