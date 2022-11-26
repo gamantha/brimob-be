@@ -1876,6 +1876,15 @@ def data_siskamtibmas_create():
     g = request.json.get('g')
     h = request.json.get('h')
     i = request.json.get('i')
+    a_total = request.json.get('a_total')
+    b_total = request.json.get('b_total')
+    c_total = request.json.get('c_total')
+    d_total = request.json.get('d_total')
+    e_total = request.json.get('e_total')
+    f_total = request.json.get('f_total')
+    g_total = request.json.get('g_total')
+    h_total = request.json.get('h_total')
+    i_total = request.json.get('i_total')
 
 
     print("before")
@@ -1894,11 +1903,13 @@ def data_siskamtibmas_create():
 
 
 
-    query = "INSERT INTO data_siskamtibmas (tanggal, region_id, a, b, c, d, e, f ,g, h, i) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    query = "INSERT INTO data_siskamtibmas (tanggal, region_id, a, b, c, d, e, f ,g, h, i, " \
+            "a_total, b_total, c_total, d_total, e_total, f_total ,g_total, h_total, i_total) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, " \
+            "%s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
     result = dict()
     try:
-        cursor.execute(query, (tanggal, region_id, a, b, c, d, e, f, g, h, i))
+        cursor.execute(query, (tanggal, region_id, a, b, c, d, e, f, g, h, i, a_total, b_total, c_total, d_total, e_total, f_total ,g_total, h_total, i_total))
         try:
             db.commit()
         except mysql.connector.Error as error:
@@ -1940,11 +1951,21 @@ def data_siskamtibmas_update():
     g = request.json.get('g')
     h = request.json.get('h')
     i = request.json.get('i')
+    a_total = request.json.get('a_total')
+    b_total = request.json.get('b_total')
+    c_total = request.json.get('c_total')
+    d_total = request.json.get('d_total')
+    e_total = request.json.get('e_total')
+    f_total = request.json.get('f_total')
+    g_total = request.json.get('g_total')
+    h_total = request.json.get('h_total')
+    i_total = request.json.get('i_total')
 
 
-    query = "UPDATE data_siskamtibmas set a = %s, b = %s, c = %s, d = %s, e = %s, f = %s, g = %s,h = %s,i = %s, status = %s where id = %s"
+    query = "UPDATE data_siskamtibmas set a = %s, b = %s, c = %s, d = %s, e = %s, f = %s, g = %s,h = %s,i = %s, " \
+            "a_total = %s, b_total = %s, c_total = %s, d_total = %s, e_total = %s, f_total = %s, g_total = %s,h_total = %s,i_total = %s, status = %s where id = %s"
 
-    cursor.execute(query, (a, b, c, d, e, f, g, h, i, status, data_siskamtibmas_id,))
+    cursor.execute(query, (a, b, c, d, e, f, g, h, i, a_total, b_total, c_total, d_total, e_total, f_total ,g_total, h_total, i_total, status, data_siskamtibmas_id,))
     result = dict()
     try:
         db.commit()
@@ -1998,7 +2019,8 @@ def data_siskamtibmas_read_bydate():
     db = get_db()
     tanggal = request.json.get('tanggal')
     cursor = db.cursor(dictionary=True)
-    query = "select data_siskamtibmas.id,tanggal,siskamtibmas_id, region_id,region.region_name, a, b, c, d, e, f, g, h, i, status " \
+    query = "select data_siskamtibmas.id,tanggal,siskamtibmas_id, region_id,region.region_name, a, b, c, d, e, f, g, h, i, " \
+            "a_total, b_total, c_total, d_total, e_total, f_total ,g_total, h_total, i_total, status " \
             "from data_siskamtibmas left join region on data_siskamtibmas.region_id = region.id where tanggal = %s order by tanggal DESC"
     cursor.execute(query,(tanggal,))
     record = cursor.fetchall()
@@ -2015,7 +2037,8 @@ def data_siskamtibmas_read_region():
     region_id = request.json.get('region_id')
     cursor = db.cursor(dictionary=True)
 
-    query = "select data_siskamtibmas.id,tanggal,siskamtibmas_id, region_id,region.region_name, a, b, c, d, e, f, g, h, i, status " \
+    query = "select data_siskamtibmas.id,tanggal,siskamtibmas_id, region_id,region.region_name, a, b, c, d, e, f, g, h, i, " \
+            "a_total, b_total, c_total, d_total, e_total, f_total ,g_total, h_total, i_total, status " \
             "from data_siskamtibmas left join region on data_siskamtibmas.region_id = region.id where region_id = %s order by tanggal DESC"
     cursor.execute(query,(region_id,))
 
