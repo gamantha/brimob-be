@@ -91,10 +91,57 @@ app.config['UPLOAD_WAKIL_FOLDER'] = UPLOAD_WAKIL_FOLDER
 
 
 
+@cc_blueprint.route('/get_config', methods=["GET"])
+def get_config():
+    db2 = get_db2()
+    cursor = db2.cursor(dictionary=True)
+    query = "SELECT * FROM configuration"
+    cursor.execute(query)
+    records = cursor.fetchall()
+    res = dict()
+    for record in records:
+        res[record['key']] = record['value'];
+    return jsonify(res)
+
 
 
 
 # /?id=D59B0CA08F49&lat=-6.2410&lon=106.8189&hdop=73&altitude=47&speed=0.0
+
+@cc_blueprint.route('/tracker_user', methods=["GET"])
+def tracker_user():
+    print('tracker user');
+    iduser = request.args.get("iduser", None)
+    lat = request.args.get("lat", None)
+    lon = request.args.get("lon", None)
+    altitude = request.args.get("altitude", None)
+
+    db2 = get_db2()
+    cursor = db2.cursor(dictionary=True)
+    timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
+
+    query = "INSERT INTO tracker_user (iduser, lat, lon, altitude, timestamp ) VALUES (%s, %s, %s, %s, %s)"
+    cursor.execute(query, (iduser, lat, lon, altitude, timestamp))
+
+    # print("here")
+    result = dict()
+    try:
+        db2.commit()
+    except mysql.connector.Error as error:
+        print("Failed to update record to database rollback: {}".format(error))
+        # reverting changes because of exception
+        cursor.rollback()
+        result['result'] = 'failed'
+        result['valid'] = 2
+    finally:
+
+        cursor.close()
+        result['result'] = 'success'
+        result['valid'] = 1
+
+    cursor.close()
+    return result
+
 
 @cc_blueprint.route('/tracker', methods=["GET"])
 def tracker():
