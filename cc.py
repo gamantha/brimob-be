@@ -1548,7 +1548,8 @@ def data_siap_gerak_read():
     db = get_db()
     siap_gerak_id = request.json.get('siap_gerak_id')
     cursor = db.cursor(dictionary=True)
-    query = "select data_siap_gerak.id, data_siap_gerak.siap_gerak_id, region_id, region.region_name, region_custom_name, jumlah_riil, jumlah_pelaksana_tugas, jumlah_siap_opsnal, siap_opsnal, jumlah_cadangan, keterangan, status " \
+    query = "select data_siap_gerak.id, data_siap_gerak.siap_gerak_id, region_id, region.region_name, region_custom_name, jumlah_riil, jumlah_pelaksana_tugas, " \
+            "jumlah_siap_opsnal, siap_opsnal, jumlah_cadangan, jumlah_siap_opsnal2, siap_opsnal2, jumlah_standby, keterangan, status " \
             "from data_siap_gerak left join region on region.id = data_siap_gerak.region_id where siap_gerak_id = %s"
     cursor.execute(query,(siap_gerak_id,))
     record = cursor.fetchall()
@@ -1564,7 +1565,8 @@ def data_siap_gerak_read_bydate():
     db = get_db()
     tanggal = request.json.get('tanggal')
     cursor = db.cursor(dictionary=True)
-    query = "select data_siap_gerak.id, tanggal,data_siap_gerak.siap_gerak_id, region_id, region.region_name, region_custom_name, jumlah_riil, jumlah_pelaksana_tugas, jumlah_siap_opsnal, siap_opsnal, jumlah_cadangan, keterangan, status " \
+    query = "select data_siap_gerak.id, tanggal,data_siap_gerak.siap_gerak_id, region_id, region.region_name, region_custom_name, jumlah_riil, jumlah_pelaksana_tugas, " \
+            "jumlah_siap_opsnal, siap_opsnal, jumlah_cadangan, keterangan, status, jumlah_siap_opsnal2, siap_opsnal2, jumlah_standby " \
             "from data_siap_gerak left join region on region.id = data_siap_gerak.region_id where tanggal = %s order by tanggal DESC"
     cursor.execute(query,(tanggal,))
     record = cursor.fetchall()
@@ -1738,7 +1740,7 @@ def data_siap_gerak_region():
     cursor = db.cursor(dictionary=True)
     region_id = request.json.get('region_id')
 
-    query = "select data_siap_gerak.id, tanggal, region_id, region.region_name, region_custom_name, jumlah_riil, jumlah_pelaksana_tugas, jumlah_siap_opsnal, siap_opsnal, jumlah_cadangan, keterangan, data_siap_gerak.status from data_siap_gerak left join region on region_id = region.id where region_id = %s order by data_siap_gerak.id desc"
+    query = "select data_siap_gerak.id, tanggal, region_id, region.region_name, region_custom_name, jumlah_riil, jumlah_pelaksana_tugas, jumlah_siap_opsnal, siap_opsnal, jumlah_siap_opsnal2, siap_opsnal2, jumlah_standby, jumlah_cadangan, keterangan, data_siap_gerak.status from data_siap_gerak left join region on region_id = region.id where region_id = %s order by data_siap_gerak.id desc"
     cursor.execute(query, (region_id,))
     record = cursor.fetchall()
     return jsonify(record)
@@ -1756,12 +1758,17 @@ def data_siap_gerak_update():
     jumlah_siap_opsnal = request.json.get('jumlah_siap_opsnal')
     siap_opsnal = request.json.get('siap_opsnal')
     jumlah_cadangan = request.json.get('jumlah_cadangan')
+    jumlah_siap_opsnal2 = request.json.get('jumlah_siap_opsnal2')
+    siap_opsnal2 = request.json.get('siap_opsnal2')
+    jumlah_standby = request.json.get('jumlah_standby')
     keterangan = request.json.get('keterangan')
     status = request.json.get('status')
 
-    query = "UPDATE data_siap_gerak set region_id = %s, region_custom_name = %s, jumlah_riil = %s, jumlah_pelaksana_tugas = %s, jumlah_siap_opsnal = %s, siap_opsnal = %s, jumlah_cadangan = %s, keterangan = %s, status = %s " \
+    query = "UPDATE data_siap_gerak set region_id = %s, region_custom_name = %s, jumlah_riil = %s, jumlah_pelaksana_tugas = %s, jumlah_siap_opsnal = %s, siap_opsnal = %s, jumlah_cadangan = %s, " \
+            "jumlah_siap_opsnal2 = %s, siap_opsnal2 = %s, jumlah_standby = %s, keterangan = %s, status = %s " \
             "where id = %s"
-    cursor.execute(query, (region_id,region_custom_name,jumlah_riil,jumlah_pelaksana_tugas,jumlah_siap_opsnal,siap_opsnal,jumlah_cadangan,keterangan,status,data_siap_gerak_id,))
+    cursor.execute(query, (region_id,region_custom_name,jumlah_riil,jumlah_pelaksana_tugas,jumlah_siap_opsnal,siap_opsnal,jumlah_cadangan,
+                           jumlah_siap_opsnal2,siap_opsnal2,jumlah_standby, keterangan,status,data_siap_gerak_id,))
 
     # print("here")
     result = dict()
