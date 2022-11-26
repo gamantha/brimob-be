@@ -1666,6 +1666,9 @@ def data_siap_gerak_create():
     jumlah_siap_opsnal = request.json.get('jumlah_siap_opsnal')
     siap_opsnal = request.json.get('siap_opsnal')
     jumlah_cadangan = request.json.get('jumlah_cadangan')
+    jumlah_siap_opsnal2 = request.json.get('jumlah_siap_opsnal2')
+    siap_opsnal2 = request.json.get('siap_opsnal2')
+    jumlah_standby = request.json.get('jumlah_standby')
     keterangan = request.json.get('keterangan')
 
     print("before")
@@ -1683,8 +1686,11 @@ def data_siap_gerak_create():
         return result
 
 
-    query = "INSERT INTO data_siap_gerak (tanggal, region_id, region_custom_name, jumlah_riil, jumlah_pelaksana_tugas, jumlah_siap_opsnal, siap_opsnal, jumlah_cadangan, keterangan) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-    cursor.execute(query, (tanggal,region_id,region_custom_name, jumlah_riil, jumlah_pelaksana_tugas,jumlah_siap_opsnal, siap_opsnal, jumlah_cadangan,keterangan,))
+    query = "INSERT INTO data_siap_gerak (tanggal, region_id, region_custom_name, jumlah_riil, jumlah_pelaksana_tugas, " \
+            "jumlah_siap_opsnal, siap_opsnal, jumlah_cadangan, " \
+            "jumlah_siap_opsnal2, siap_opsnal2, jumlah_standby, keterangan) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    cursor.execute(query, (tanggal,region_id,region_custom_name, jumlah_riil, jumlah_pelaksana_tugas,
+                           jumlah_siap_opsnal, siap_opsnal, jumlah_cadangan, jumlah_siap_opsnal2, siap_opsnal2, jumlah_standby, keterangan,))
     print("after")
 
     try:
