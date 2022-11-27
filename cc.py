@@ -1457,7 +1457,7 @@ def laporan_giat_list():
     # date_approved = request.json.get('date_approved')
     # status = request.json.get('status')
     query = "SELECT laporan_giat.id, laporan_giat.user_id, laporan_giat.region_id, region.region_name, laporan_giat.department_id, department.department_name, no_laporan, " \
-            "tgl_laporan, DATE_FORMAT(tgl_laporan, '%e/%m/%Y') as tgl_for_search, lat_pelapor, long_pelapor, alamat, laporan_text, laporan_subcategory_id, subkategori.sub_kategori, image_file FROM laporan_giat " \
+            "tgl_laporan, DATE_FORMAT(tgl_laporan, '%e/%m/%Y') as tgl_for_search, lat_pelapor, long_pelapor, laporan_giat.alamat, laporan_text, laporan_subcategory_id, subkategori.sub_kategori, image_file FROM laporan_giat " \
             "LEFT JOIN region ON region.id = laporan_giat.region_id " \
             "LEFT JOIN subkategori ON subkategori.idsubkategori = laporan_giat.laporan_subcategory_id " \
             "LEFT JOIN department ON department.id = laporan_giat.department_id "
@@ -3009,12 +3009,13 @@ def display_stats(self=None):
 
 @cc_blueprint.route('/laporan_giat_list_peruser', methods=["POST"])
 def laporan_giat_list_peruser():
+    print('laporan giat list peruser');
     db = get_db()
     cursor = db.cursor(dictionary=True)
     userid = request.json.get('user_id')
     laporan_subcategory_id = request.json.get('laporan_subcategory_id')
     # status = request.json.get('status')
-    query = "SELECT laporan_giat.id, laporan_giat.user_id, user.username, user_data.nama, laporan_giat.region_id, region.region_name, laporan_giat.department_id, department.department_name, no_laporan, tgl_submitted, lat_pelapor, long_pelapor, alamat, laporan_text, laporan_subcategory_id, subkategori.sub_kategori, image_file FROM laporan_giat " \
+    query = "SELECT laporan_giat.id, laporan_giat.user_id, user.username, user_data.nama, laporan_giat.region_id, region.region_name, laporan_giat.department_id, department.department_name, no_laporan, tgl_submitted, lat_pelapor, long_pelapor, laporan_giat.alamat, laporan_text, laporan_subcategory_id, subkategori.sub_kategori, image_file FROM laporan_giat " \
             "LEFT JOIN region ON region.id = laporan_giat.region_id " \
             "LEFT JOIN subkategori ON subkategori.idsubkategori = laporan_giat.laporan_subcategory_id " \
             "LEFT JOIN user ON user.iduser = laporan_giat.user_id " \
