@@ -1433,7 +1433,7 @@ def laporan_giat_user():
     db = get_db()
     cursor = db.cursor(dictionary=True)
     query = "SELECT laporan_giat.id, laporan_giat.user_id, laporan_giat.region_id, laporan_giat.department_id, laporan_giat.no_laporan, laporan_giat.tgl_laporan, " \
-            "laporan_giat.laporan_text, laporan_giat.lat_pelapor, laporan_giat.long_pelapor, laporan_giat.laporan_subcategory_id, subkategori.sub_kategori,  laporan_giat.image_file FROM laporan_giat " \
+            "laporan_giat.laporan_text, laporan_giat.lat_pelapor, laporan_giat.long_pelapor, laporan_giat.alamat, laporan_giat.laporan_subcategory_id, subkategori.sub_kategori,  laporan_giat.image_file FROM laporan_giat " \
             "LEFT JOIN subkategori ON subkategori.idsubkategori = laporan_giat.laporan_subcategory_id "
             # "WHERE DATE(laporan_published.date_submitted) =  DATE('"+ date +"')  AND laporan.sub_kategori_id =  " + subkategoriid + " GROUP BY laporan.laporan_subcategory_id"
     cursor.execute(query,)
@@ -1457,7 +1457,7 @@ def laporan_giat_list():
     # date_approved = request.json.get('date_approved')
     # status = request.json.get('status')
     query = "SELECT laporan_giat.id, laporan_giat.user_id, laporan_giat.region_id, region.region_name, laporan_giat.department_id, department.department_name, no_laporan, " \
-            "tgl_laporan, DATE_FORMAT(tgl_laporan, '%e/%m/%Y') as tgl_for_search, lat_pelapor, long_pelapor, laporan_text, laporan_subcategory_id, subkategori.sub_kategori, image_file FROM laporan_giat " \
+            "tgl_laporan, DATE_FORMAT(tgl_laporan, '%e/%m/%Y') as tgl_for_search, lat_pelapor, long_pelapor, alamat, laporan_text, laporan_subcategory_id, subkategori.sub_kategori, image_file FROM laporan_giat " \
             "LEFT JOIN region ON region.id = laporan_giat.region_id " \
             "LEFT JOIN subkategori ON subkategori.idsubkategori = laporan_giat.laporan_subcategory_id " \
             "LEFT JOIN department ON department.id = laporan_giat.department_id "
@@ -1482,16 +1482,17 @@ def laporan_giat_submit():
     department_id = request.json.get('department_id')
     lat_pelapor = request.json.get('lat_pelapor')
     long_pelapor = request.json.get('long_pelapor')
+    alamat = request.json.get('alamat')
     image_file = request.json.get('image_file')
     formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
 
     ts = time.time()
     no_laporan = str(user_id) + "-" + str(laporan_subcategory_id) + "-" + os.path.splitext(str(ts))[0]
-    query = "INSERT INTO laporan_giat (user_id, region_id, department_id, no_laporan, tgl_laporan, laporan_text,  lat_pelapor, long_pelapor, laporan_subcategory_id, image_file, tgl_submitted) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) "
+    query = "INSERT INTO laporan_giat (user_id, region_id, department_id, no_laporan, tgl_laporan, laporan_text,  lat_pelapor, long_pelapor, alamat, laporan_subcategory_id, image_file, tgl_submitted) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) "
 
     result = dict()
     print("laporan giat review")
-    cursor.execute(query, (str(user_id),str(region_id),str(department_id),str(no_laporan), tgl_laporan, laporan_text,str(lat_pelapor),str(long_pelapor),str(laporan_subcategory_id),image_file,formatted_date))
+    cursor.execute(query, (str(user_id),str(region_id),str(department_id),str(no_laporan), tgl_laporan, laporan_text,str(lat_pelapor),str(long_pelapor),str(alamat),str(laporan_subcategory_id),image_file,formatted_date))
     try:
         db.commit()
     except mysql.connector.Error as error:
@@ -3013,7 +3014,7 @@ def laporan_giat_list_peruser():
     userid = request.json.get('user_id')
     laporan_subcategory_id = request.json.get('laporan_subcategory_id')
     # status = request.json.get('status')
-    query = "SELECT laporan_giat.id, laporan_giat.user_id, user.username, user_data.nama, laporan_giat.region_id, region.region_name, laporan_giat.department_id, department.department_name, no_laporan, tgl_submitted, lat_pelapor, long_pelapor, laporan_text, laporan_subcategory_id, subkategori.sub_kategori, image_file FROM laporan_giat " \
+    query = "SELECT laporan_giat.id, laporan_giat.user_id, user.username, user_data.nama, laporan_giat.region_id, region.region_name, laporan_giat.department_id, department.department_name, no_laporan, tgl_submitted, lat_pelapor, long_pelapor, alamat, laporan_text, laporan_subcategory_id, subkategori.sub_kategori, image_file FROM laporan_giat " \
             "LEFT JOIN region ON region.id = laporan_giat.region_id " \
             "LEFT JOIN subkategori ON subkategori.idsubkategori = laporan_giat.laporan_subcategory_id " \
             "LEFT JOIN user ON user.iduser = laporan_giat.user_id " \
