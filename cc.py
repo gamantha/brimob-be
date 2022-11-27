@@ -1516,7 +1516,7 @@ def siap_gerak_read():
     db = get_db()
     siap_gerak_id = request.json.get('siap_gerak_id')
     cursor = db.cursor(dictionary=True)
-    query = "select id,title, tanggal_laporan, notes1, notes2, status, approved, approved_by, approved_at, `user`.username " \
+    query = "select id,title, tanggal_laporan, notes1, notes2, status, approved, approved_by, approved_at, kop_1, kop_2, `user`.username " \
             "from siap_gerak left join user on approved_by = user.iduser"
     cursor.execute(query,)
     record = cursor.fetchall()
@@ -1532,7 +1532,7 @@ def siap_gerak_read_bydate():
     db = get_db()
     tanggal_laporan = request.json.get('tanggal_laporan')
     cursor = db.cursor(dictionary=True)
-    query = "select id,title, tanggal_laporan, notes1, notes2, status, approved, approved_by, approved_at, `user`.username " \
+    query = "select id,title, tanggal_laporan, notes1, notes2, status, approved, approved_by, approved_at, kop_1, kop_2, `user`.username " \
             "from siap_gerak left join user on approved_by = user.iduser where tanggal_laporan = %s order by tanggal_laporan DESC"
     cursor.execute(query,(tanggal_laporan,))
     record = cursor.fetchall()
@@ -2491,6 +2491,50 @@ def template_siskamtibmas_update():
     return result
 
 
+######################## TEMPLATE SIAPGERAK ################################
+
+
+@cc_blueprint.route('/template_siapgerak_read', methods=["GET"])
+def template_siapgerak_read():
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    query = "select * from template_siapgerak"
+    cursor.execute(query,)
+    record = cursor.fetchone()
+    cursor.close()
+    result = dict()
+    # print(record)
+    temp = dict()
+
+    return jsonify(record)
+
+@cc_blueprint.route('/template_siapgerak_update', methods=["POST"])
+def template_siapgerak_update():
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    kop_1 = request.json.get('kop_1')
+    kop_2 = request.json.get('kop_2')
+
+
+    query = "UPDATE template_siapgerak set kop_1 = %s, kop_2 = %s"
+    cursor.execute(query, (kop_1, kop_2,))
+
+    result = dict()
+    try:
+        db.commit()
+    except mysql.connector.Error as error:
+        print("Failed to update record to database rollback: {}".format(error))
+        # reverting changes because of exception
+        cursor.rollback()
+        result['result'] = 'failed'
+        result['valid'] = 2
+    finally:
+
+        cursor.close()
+        result['result'] = 'success'
+        result['valid'] = 1
+    cursor.close()
+    return result
 
 
 ################### REGION CRUD #################################################
