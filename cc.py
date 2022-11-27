@@ -1587,6 +1587,8 @@ def siap_gerak_create():
     cursor = db.cursor(dictionary=True)
     notes1 = request.json.get('notes1')
     notes2 = request.json.get('notes2')
+    kop_1 = request.json.get('kop_1')
+    kop_2 = request.json.get('kop_2')
     tanggal_laporan = request.json.get('tanggal_laporan')
 
     result = dict()
@@ -1808,10 +1810,12 @@ def siap_gerak_update():
     tanggal_laporan = request.json.get('tanggal_laporan')
     notes1 = request.json.get('notes1')
     notes2 = request.json.get('notes2')
+    kop_1 = request.json.get('kop_1')
+    kop_2 = request.json.get('kop_2')
 
 
-    query = "UPDATE siap_gerak SET siap_gerak.title = %s, tanggal_laporan = %s, notes1 = %s, notes2 = %s where siap_gerak.id = %s"
-    cursor.execute(query, (title,tanggal_laporan,notes1, notes2,siap_gerak_id,))
+    query = "UPDATE siap_gerak SET siap_gerak.title = %s, tanggal_laporan = %s, notes1 = %s, notes2 = %s, kop_1 = %s, kop_2 = %s where siap_gerak.id = %s"
+    cursor.execute(query, (title,tanggal_laporan,notes1, notes2,kop_1, kop_2, siap_gerak_id,))
 
 
     result = dict()
