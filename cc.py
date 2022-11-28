@@ -6,6 +6,8 @@ from datetime import date
 import os
 import json
 
+from mysql.connector import Date
+
 from stats import Stats
 from dbconfig import DBConfig
 from dbconfig2 import DBConfig2
@@ -2003,6 +2005,24 @@ def data_siskamtibmas_update():
     g_total = request.json.get('g_total')
     h_total = request.json.get('h_total')
     i_total = request.json.get('i_total')
+    print("inside data siskamtimbas update 2")
+
+    query = "SELECT * FROM data_siskamtibmas WHERE id = %s"
+    cursor.execute(query, (data_siskamtibmas_id,))
+    row = cursor.fetchone()
+
+    print(row['tanggal'])
+    if (status == 'approved') :
+        print('approved')
+        tgl_laporan = row['tanggal']
+        # today = now.strftime("%d/%m/%Y")
+        today = now.today()
+        max_allowed_time = datetime.combine(tgl_laporan, datetime.max.time())
+        print(tgl_laporan)
+        print(today)
+
+        if (today > max_allowed_time) :
+            status = 'notapproved - late'
 
 
     query = "UPDATE data_siskamtibmas set a = %s, b = %s, c = %s, d = %s, e = %s, f = %s, g = %s,h = %s,i = %s, " \
