@@ -1637,8 +1637,8 @@ def siap_gerak_create():
         result['valid'] = 0
         return result
 
-    query = "INSERT INTO siap_gerak (tanggal_laporan, notes1, notes2) VALUES (%s, %s, %s)"
-    cursor.execute(query, (tanggal_laporan, notes1, notes2,))
+    query = "INSERT INTO siap_gerak (tanggal_laporan, notes1, notes2, kop_1, kop_2) VALUES (%s, %s, %s ,%s, %s)"
+    cursor.execute(query, (tanggal_laporan, notes1, notes2,kop_1, kop_2,))
 
     result = dict()
     try:
