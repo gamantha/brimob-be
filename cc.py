@@ -2017,7 +2017,8 @@ def data_siskamtibmas_update():
         tgl_laporan = row['tanggal']
         # today = now.strftime("%d/%m/%Y")
         today = now.today()
-        max_allowed_time = datetime.combine(tgl_laporan, datetime.max.time())
+        tm = datetime.strptime("0130","%H%M").time()
+        max_allowed_time = datetime.combine(tgl_laporan, tm)
         print(tgl_laporan)
         print(today)
 
