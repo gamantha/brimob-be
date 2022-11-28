@@ -2293,6 +2293,11 @@ def komandan_image_download():
     image_name = request.json.get('image_name')
     return send_from_directory(app.config["UPLOAD_KOMANDAN_FOLDER"], image_name)
 
+@cc_blueprint.route('/komandan_image_download_ios', methods=["GET"])
+def komandan_image_download_ios():
+    image_name = request.args.get("image_name", None)
+    return send_from_directory(app.config["UPLOAD_KOMANDAN_FOLDER"], image_name)
+
 
 @cc_blueprint.route('/wakil_image_upload', methods=["POST"])
 def wakil_image_upload():
