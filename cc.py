@@ -2023,7 +2023,7 @@ def data_siskamtibmas_update():
         print(today)
 
         if (today > max_allowed_time) :
-            status = 'notapproved - late ' + max_allowed_time.strftime("%d-%b-%Y (%H:%M:%S.%f)") + ' < ' + today.strftime("%d-%b-%Y (%H:%M:%S.%f)")
+            status = 'notapproved - late'
 
 
     query = "UPDATE data_siskamtibmas set a = %s, b = %s, c = %s, d = %s, e = %s, f = %s, g = %s,h = %s,i = %s, " \
