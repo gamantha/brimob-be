@@ -2017,13 +2017,13 @@ def data_siskamtibmas_update():
         tgl_laporan = row['tanggal']
         # today = now.strftime("%d/%m/%Y")
         today = now.today()
-        tm = datetime.strptime("0130","%H%M").time()
+        tm = datetime.strptime("1700","%H%M").time()
         max_allowed_time = datetime.combine(tgl_laporan, tm)
         print(tgl_laporan)
         print(today)
 
         if (today > max_allowed_time) :
-            status = 'notapproved - late'
+            status = 'notapproved - late ' + max_allowed_time.strftime("%d-%b-%Y (%H:%M:%S.%f)") + ' < ' + today.strftime("%d-%b-%Y (%H:%M:%S.%f)")
 
 
     query = "UPDATE data_siskamtibmas set a = %s, b = %s, c = %s, d = %s, e = %s, f = %s, g = %s,h = %s,i = %s, " \
