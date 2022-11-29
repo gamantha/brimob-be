@@ -1472,12 +1472,7 @@ def laporan_giat_user():
             "LEFT JOIN user ON user.iduser = laporan_giat.user_id "
             # "WHERE DATE(laporan_published.date_submitted) =  DATE('"+ date +"')  AND laporan.sub_kategori_id =  " + subkategoriid + " GROUP BY laporan.laporan_subcategory_id"
 
-    query = "SELECT laporan_giat.id, laporan_giat.user_id, user.username, user_data.nama, laporan_giat.region_id, region.region_name, laporan_giat.department_id, department.department_name, no_laporan, tgl_submitted, lat_pelapor, long_pelapor, laporan_giat.alamat, laporan_text, laporan_subcategory_id, subkategori.sub_kategori, image_file FROM laporan_giat " \
-            "LEFT JOIN region ON region.id = laporan_giat.region_id " \
-            "LEFT JOIN subkategori ON subkategori.idsubkategori = laporan_giat.laporan_subcategory_id " \
-            "LEFT JOIN user ON user.iduser = laporan_giat.user_id " \
-            "LEFT JOIN user_data ON user_data.iduser = laporan_giat.user_id " \
-            "LEFT JOIN department ON department.id = laporan_giat.department_id WHERE laporan_giat.user_id = %s AND laporan_giat.laporan_subcategory_id = %s"
+
 
     cursor.execute(query,)
     record = cursor.fetchall()
@@ -1499,11 +1494,12 @@ def laporan_giat_list():
     # date_submitted = request.json.get('date_submitted')
     # date_approved = request.json.get('date_approved')
     # status = request.json.get('status')
-    query = "SELECT laporan_giat.id, laporan_giat.user_id, laporan_giat.region_id, region.region_name, laporan_giat.department_id, department.department_name, no_laporan, " \
+    query = "SELECT laporan_giat.id, laporan_giat.user_id, user.username, laporan_giat.region_id, region.region_name, laporan_giat.department_id, department.department_name, no_laporan, " \
             "tgl_laporan, DATE_FORMAT(tgl_laporan, '%e/%m/%Y') as tgl_for_search, lat_pelapor, long_pelapor, laporan_giat.alamat, laporan_text, laporan_subcategory_id, subkategori.sub_kategori, image_file FROM laporan_giat " \
             "LEFT JOIN region ON region.id = laporan_giat.region_id " \
             "LEFT JOIN subkategori ON subkategori.idsubkategori = laporan_giat.laporan_subcategory_id " \
-            "LEFT JOIN department ON department.id = laporan_giat.department_id "
+            "LEFT JOIN department ON department.id = laporan_giat.department_id " \
+            "LEFT JOIN user ON user.iduser = laporan_giat.user_id "
     cursor.execute(query)
     record = cursor.fetchall()
     cursor.close()
