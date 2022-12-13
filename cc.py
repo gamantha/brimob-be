@@ -186,9 +186,9 @@ def get_tracker_user_byregion():
     region_id = request.json.get("region_id", None)
     db2 = get_db2()
     cursor = db2.cursor(dictionary=True)
-    query = "select tracker_user.id, tracker_user.iduser, user.username,lat, lon, altitude, tracker_user.timestamp " \
+    query = "select tracker_user.id, tracker_user.iduser, user.username, user_data.nama, user_data.pangkat, region.region_name, department.department_name, position.position_name, lat, lon, altitude, tracker_user.timestamp " \
             "from tracker_user LEFT JOIN user on tracker_user.iduser = user.iduser LEFT JOIN position on user.position_id = position.id " \
-            "LEFT JOIN department on department.id = position.department_id LEFT JOIN region on region.id = department.region_id " \
+            "LEFT JOIN user_data on user_data.iduser = tracker_user.iduser LEFT JOIN department on department.id = position.department_id LEFT JOIN region on region.id = department.region_id " \
             "where tracker_user.id in (select max(tracker_user.id) from tracker_user group by iduser) AND region_id = %s"
 
     cursor.execute(query,(region_id,))
@@ -1425,6 +1425,24 @@ def user_idle():
     return res
 
 
+@cc_blueprint.route('/test', methods=["POST"])
+# @jwt_required()
+def test():
+    id = request.json.get('id', None)
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    query = "SELECT a FROM data_siskamtibmas WHERE id = %s"
+    cursor.execute(query, (id,))
+    record = cursor.fetchall()
+    if (len(record) > 0) :
+        name = record[0];
+    else :
+        name = ""
+
+    res = dict()
+    res = name['a']
+    cursor.close()
+    return res
 
 
 @cc_blueprint.route('/verify', methods=["POST"])
