@@ -29,6 +29,7 @@ import bcrypt
 
 import time
 import pdfkit
+import redis
 
 
 from flask_jwt_extended import create_access_token
@@ -43,6 +44,12 @@ import bcrypt
 
 dbObj = DBConfig()
 dbObj2 = DBConfig2()
+
+r = redis.Redis(
+    host='202.67.10.238',
+    port=6379,
+    password='')
+
 
 def get_db():
     """Opens a new database connection if there is none yet for the
@@ -255,8 +262,16 @@ def login_user():
     return res
 
 def authenticate_user(username, password):
+
+    r.set("France", "Paris");
+    print(r.get("France"));
     db = get_db()
     cursor = db.cursor(dictionary=True)
+
+    username_exists = r.exists(username)
+    if username_exists:
+        print("true")
+        return r.get(username)
     query = "SELECT iduser,username,password, level_user, position_id, position.position_name as 'position_name', department.id as 'department_id', department.department_name as 'department_name', " \
             "region.id as 'region_id', region.region_name as 'region_name' FROM user " \
             "LEFT JOIN position ON position.id = user.position_id " \
@@ -307,8 +322,12 @@ def authenticate_user(username, password):
             res['region_name'] = region_name
             res['token'] = token
 
-            return jsonify(token=access_token, iduser=iduser, name=name, level_user=level_user, position_id=position_id, position_name=position_name,
-                           department_id=department_id, department_name=department_name, region_id=region_id,region_name=region_name, valid=valid)
+
+            jsondumps = json.dumps(token=access_token, iduser=iduser, name=name, level_user=level_user, position_id=position_id, position_name=position_name,
+                           department_id=department_id, department_name=department_name, region_id=region_id,region_name=region_name, valid=valid);
+            response = jsonify(jsondumps);
+            # r.set(username, str(response));
+            return response.text
         else:
             valid = 2
             res['valid'] = valid
