@@ -202,6 +202,21 @@ def get_tracker_user_byregion():
     record = cursor.fetchall()
     return jsonify(record)
 
+@cc_blueprint.route('/get_tracker_activeuser_byregion', methods=["POST"])
+def get_tracker_activeuser_byregion():
+
+    region_id = request.json.get("region_id", None)
+    db2 = get_db2()
+    cursor = db2.cursor(dictionary=True)
+    query = "select tracker_user.id, tracker_user.iduser, user.username, user_data.nama, user_data.pangkat, region.region_name, department.department_name, position.position_name, lat, lon, altitude, tracker_user.timestamp " \
+            "from tracker_user LEFT JOIN user on tracker_user.iduser = user.iduser LEFT JOIN position on user.position_id = position.id " \
+            "LEFT JOIN user_data on user_data.iduser = tracker_user.iduser LEFT JOIN department on department.id = position.department_id LEFT JOIN region on region.id = department.region_id " \
+            "where tracker_user.id in (select max(tracker_user.id) from tracker_user group by iduser) AND region_id = %s AND `timestamp` > DATE_SUB(now(),INTERVAL 1 HOUR)"
+
+    cursor.execute(query,(region_id,))
+    record = cursor.fetchall()
+    return jsonify(record)
+
 
 @cc_blueprint.route('/get_tracker_devices', methods=["GET"])
 def get_tracker_devices():
