@@ -1559,6 +1559,26 @@ def laporan_giat_list():
     result = record
     return jsonify(result)
 
+@cc_blueprint.route('/laporan_giat_list_harian', methods=["GET"])
+def laporan_giat_list_harian():
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    # date_submitted = request.json.get('date_submitted')
+    # date_approved = request.json.get('date_approved')
+    # status = request.json.get('status')
+    query = "SELECT laporan_giat.id, laporan_giat.user_id, user.username, laporan_giat.region_id, region.region_name, laporan_giat.department_id, department.department_name, no_laporan, " \
+            "tgl_laporan, DATE_FORMAT(tgl_laporan, '%e/%m/%Y') as tgl_for_search, lat_pelapor, long_pelapor, laporan_giat.alamat, laporan_text, laporan_subcategory_id, subkategori.sub_kategori, image_file, laporan_giat.tgl_submitted FROM laporan_giat " \
+            "LEFT JOIN region ON region.id = laporan_giat.region_id " \
+            "LEFT JOIN subkategori ON subkategori.idsubkategori = laporan_giat.laporan_subcategory_id " \
+            "LEFT JOIN department ON department.id = laporan_giat.department_id " \
+            "LEFT JOIN user ON user.iduser = laporan_giat.user_id WHERE DATE(laporan_giat.tgl_submitted) = CURDATE()"
+    cursor.execute(query)
+    record = cursor.fetchall()
+    cursor.close()
+    result = dict()
+    result = record
+    return jsonify(result)
+
 
 @cc_blueprint.route('/laporan_giat_submit', methods=["POST"])
 def laporan_giat_submit():
@@ -2421,6 +2441,7 @@ def wakil_image_upload():
 
 @cc_blueprint.route('/wakil_image_download', methods=["POST"])
 def wakil_image_download():
+    print("download OK")
     image_name = request.json.get('image_name')
     return send_from_directory(app.config["UPLOAD_WAKIL_FOLDER"], image_name)
 
