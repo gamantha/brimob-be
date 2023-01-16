@@ -1574,7 +1574,7 @@ def laporan_giat_list():
     result = record
     return jsonify(result)
 
-@cc_blueprint.route('/laporan_giat_list_harian', methods=["GET"])
+@cc_blueprint.route('/laporan_giat_list_harian', methods=["POST"])
 def laporan_giat_list_harian():
     db = get_db()
     cursor = db.cursor(dictionary=True)
