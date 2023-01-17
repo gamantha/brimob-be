@@ -338,11 +338,11 @@ def authenticate_user(username, password):
             res['token'] = token
 
 
-            jsondumps = json.dumps(token=access_token, iduser=iduser, name=name, level_user=level_user, position_id=position_id, position_name=position_name,
-                           department_id=department_id, department_name=department_name, region_id=region_id,region_name=region_name, valid=valid);
-            response = jsonify(jsondumps);
+            # jsondumps = json.dumps(token=access_token, iduser=iduser, name=name, level_user=level_user, position_id=position_id, position_name=position_name,
+            #                department_id=department_id, department_name=department_name, region_id=region_id,region_name=region_name, valid=valid);
+            # response = jsonify(jsondumps);
             # r.set(username, str(response));
-            return response.text
+            return jsonify(token=access_token, iduser=iduser, name=name, level_user=level_user, position_id=position_id, position_name=position_name, department_id=department_id, department_name=department_name, region_id=region_id,region_name=region_name, valid=valid);
         else:
             valid = 2
             res['valid'] = valid
