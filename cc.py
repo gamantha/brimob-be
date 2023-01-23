@@ -3493,7 +3493,7 @@ def operasi_create():
 @cc_blueprint.route('/operasi_read', methods=["POST"])
 def operasi_read():
     db = get_db()
-    id = request.json.get('id')
+    # id = request.json.get('id')
     cursor = db.cursor(dictionary=True)
     query = "select id,nama_operasi, status " \
             "from operasi"
