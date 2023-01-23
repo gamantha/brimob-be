@@ -3444,3 +3444,175 @@ def print_pdf():
     # pdfkit.from_url('https://api.brimob.id/#/report?n=1', 'out2.pdf',options=options)
     # pdfkit.from_file('g.html', 'out.pdf')
     return "ok"
+
+
+
+
+@cc_blueprint.route('/operasi_create', methods=["POST"])
+def operasi_create():
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    nama_operasi = request.json.get('nama_operasi')
+    status = request.json.get('status')
+
+    query = "INSERT INTO operasi (nama_operasi, status) VALUES (%s, %s)"
+    cursor.execute(query, (nama_operasi,status,))
+
+    result = dict()
+    try:
+        db.commit()
+    except mysql.connector.Error as error:
+        print("Failed to update record to database rollback: {}".format(error))
+        # reverting changes because of exception
+        cursor.rollback()
+        result['result'] = 'failed'
+        result['valid'] = 0
+    finally:
+
+        cursor.close()
+        result['result'] = 'success'
+        result['valid'] = 1
+    cursor.close()
+    return result
+
+@cc_blueprint.route('/operasi_read', methods=["POST"])
+def operasi_read():
+    db = get_db()
+    id = request.json.get('id')
+    cursor = db.cursor(dictionary=True)
+    query = "select id,nama_operasi, status " \
+            "from operasi where id = %s"
+    cursor.execute(query,(id,))
+    record = cursor.fetchone()
+    cursor.close()
+    result = dict()
+    temp = dict()
+    return jsonify(record)
+@cc_blueprint.route('/operasi_update', methods=["POST"])
+def operasi_update():
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    nama_operasi = request.json.get('nama_operasi')
+    status = request.json.get('status')
+    id = request.json.get('id')
+
+    query = "UPDATE operasi SET operasi.nama_operasi = %s, operasi.status = %s where operasi.id = %s"
+    cursor.execute(query, (nama_operasi, status, id,))
+
+    result = dict()
+    try:
+        db.commit()
+        cursor.close()
+        result['result'] = 'success'
+        result['row_affected'] = cursor.rowcount
+        result['valid'] = 1
+    except mysql.connector.Error as error:
+        print("Failed to update record to database rollback: {}".format(error))
+        # reverting changes because of exception
+        cursor.rollback()
+        result['result'] = 'failed'
+        result['row_affected'] = cursor.rowcount
+        result['valid'] = 0
+
+    cursor.close()
+    return result
+
+@cc_blueprint.route('/operasi_delete', methods=["DELETE"])
+def operasi_delete():
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    id = request.json.get('id')
+
+    query = "DELETE FROM operasi where id = %s"
+    cursor.execute(query, (id,))
+
+    result = dict()
+    try:
+        db.commit()
+        result['row_affected'] = cursor.rowcount
+        result['result'] = 'success'
+        result['valid'] = 1
+    except mysql.connector.Error as error:
+        print("Failed to update record to database rollback: {}".format(error))
+        # reverting changes because of exception
+        cursor.rollback()
+        result['result'] = 'failed'
+        result['row_affected'] = cursor.rowcount
+        result['valid'] = 0
+    finally:
+
+        cursor.close()
+
+    cursor.close()
+    return result
+
+@cc_blueprint.route('/operasi_anggota_create', methods=["POST"])
+def operasi_anggota_create():
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    operasi_id = request.json.get('operasi_id')
+    user_id = request.json.get('user_id')
+    status = request.json.get('status')
+
+    query = "INSERT INTO operasi_anggota (operasi_id, user_id, status) VALUES (%s, %s, %s)"
+    cursor.execute(query, (operasi_id, user_id, status,))
+
+    result = dict()
+    try:
+        db.commit()
+    except mysql.connector.Error as error:
+        print("Failed to update record to database rollback: {}".format(error))
+        # reverting changes because of exception
+        cursor.rollback()
+        result['result'] = 'failed'
+        result['valid'] = 0
+    finally:
+
+        cursor.close()
+        result['result'] = 'success'
+        result['valid'] = 1
+    cursor.close()
+    return result
+
+@cc_blueprint.route('/operasi_anggota_read', methods=["POST"])
+def operasi_anggota_read():
+    db = get_db()
+    operasi_id = request.json.get('operasi_id')
+    cursor = db.cursor(dictionary=True)
+    query = "select id,operasi_id, user_id,status " \
+            "from operasi_anggota where operasi_id = %s"
+    cursor.execute(query,(operasi_id,))
+    record = cursor.fetchall()
+    cursor.close()
+    result = dict()
+    temp = dict()
+    return jsonify(record)
+
+@cc_blueprint.route('/operasi_anggota_delete', methods=["DELETE"])
+def operasi_anggota_delete():
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    id = request.json.get('id')
+
+    query = "DELETE FROM operasi_anggota where id = %s"
+    cursor.execute(query, (id,))
+
+    result = dict()
+    try:
+        db.commit()
+        result['row_affected'] = cursor.rowcount
+        result['result'] = 'success'
+        result['valid'] = 1
+    except mysql.connector.Error as error:
+        print("Failed to update record to database rollback: {}".format(error))
+        # reverting changes because of exception
+        cursor.rollback()
+        result['result'] = 'failed'
+        result['row_affected'] = cursor.rowcount
+        result['valid'] = 0
+    finally:
+
+        cursor.close()
+
+    cursor.close()
+    return result
