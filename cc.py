@@ -3490,15 +3490,14 @@ def operasi_create():
     cursor.close()
     return result
 
-@cc_blueprint.route('/operasi_read', methods=["POST"])
+@cc_blueprint.route('/operasi_read', methods=["GET"])
 def operasi_read():
     db = get_db()
     # id = request.json.get('id')
     cursor = db.cursor(dictionary=True)
-    query = "select id,nama_operasi, status " \
-            "from operasi"
-    cursor.execute(query,)
-    record = cursor.fetchone()
+    query = "select id,nama_operasi, status from operasi"
+    cursor.execute(query)
+    record = cursor.fetchall()
     cursor.close()
     result = dict()
     temp = dict()
