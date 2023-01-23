@@ -3496,8 +3496,8 @@ def operasi_read():
     id = request.json.get('id')
     cursor = db.cursor(dictionary=True)
     query = "select id,nama_operasi, status " \
-            "from operasi where id = %s"
-    cursor.execute(query,(id,))
+            "from operasi"
+    cursor.execute(query,)
     record = cursor.fetchone()
     cursor.close()
     result = dict()
