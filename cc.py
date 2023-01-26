@@ -211,7 +211,7 @@ def get_tracker_activeuser_byregion():
     query = "select tracker_user.id, tracker_user.iduser, user.username, user_data.nama, user_data.pangkat, region.region_name, department.department_name, position.position_name, lat, lon, altitude, tracker_user.timestamp " \
             "from tracker_user LEFT JOIN user on tracker_user.iduser = user.iduser LEFT JOIN position on user.position_id = position.id " \
             "LEFT JOIN user_data on user_data.iduser = tracker_user.iduser LEFT JOIN department on department.id = position.department_id LEFT JOIN region on region.id = department.region_id " \
-            "where tracker_user.id in (select max(tracker_user.id) from tracker_user group by iduser) AND region_id = %s AND `timestamp` > DATE_SUB(now(),INTERVAL 1 HOUR)"
+            "where tracker_user.id in (select max(tracker_user.id) from tracker_user group by iduser) AND region_id = %s AND `timestamp` > DATE_SUB(now(),INTERVAL 3 HOUR)"
 
     cursor.execute(query,(region_id,))
     record = cursor.fetchall()
@@ -229,7 +229,7 @@ def get_tracker_activeuser_byoperation():
     query = "select max(tracker_user.id), tracker_user.iduser, user.username, user_data.nama, user_data.pangkat, region.region_name, department.department_name, position.position_name, lat, lon, altitude, tracker_user.timestamp " \
             "from tracker_user LEFT JOIN user on tracker_user.iduser = user.iduser LEFT JOIN position on user.position_id = position.id " \
             "LEFT JOIN user_data on user_data.iduser = tracker_user.iduser LEFT JOIN department on department.id = position.department_id LEFT JOIN region on region.id = department.region_id " \
-            "where tracker_user.iduser in (select user_id from operasi_anggota where status = 'active' and operasi_id = %s) AND `timestamp` > DATE_SUB(now(),INTERVAL 3 YEAR) group by tracker_user.iduser "
+            "where tracker_user.iduser in (select user_id from operasi_anggota where status = 'active' and operasi_id = %s) AND `timestamp` > DATE_SUB(now(),INTERVAL 3 HOUR) group by tracker_user.iduser "
 
     cursor.execute(query,(operation_id,))
     record = cursor.fetchall()
