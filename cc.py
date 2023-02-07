@@ -41,6 +41,10 @@ now = datetime.now()
 from flask import send_from_directory
 
 import bcrypt
+from geopy.geocoders import GoogleV3
+
+
+
 
 dbObj = DBConfig()
 dbObj2 = DBConfig2()
@@ -1483,6 +1487,13 @@ def user_idle():
 @cc_blueprint.route('/test', methods=["POST"])
 # @jwt_required()
 def test():
+
+    geolocator = GoogleV3(api_key="AIzaSyA-UihCqjrW2gmHh4TSGUYgQvoBBAMLYPw")
+
+    location = geolocator.reverse("-6.8460987, 107.5487953")
+
+    print(location.address)
+
     id = request.json.get('id', None)
     db = get_db()
     cursor = db.cursor(dictionary=True)
@@ -1634,7 +1645,8 @@ def laporan_giat_submit():
     formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
 
     ts = time.time()
-    no_laporan = str(user_id) + "-" + str(laporan_subcategory_id) + "-" + os.path.splitext(str(ts))[0]
+    # no_laporan = str(user_id) + "-" + str(laporan_subcategory_id) + "-" + os.path.splitext(str(ts))[0]
+    no_laporan = str(user_id) + str(laporan_subcategory_id) + os.path.splitext(str(ts))[0]
     query = "INSERT INTO laporan_giat (user_id, region_id, department_id, no_laporan, tgl_laporan, laporan_text,  lat_pelapor, long_pelapor, alamat, laporan_subcategory_id, image_file, tgl_submitted) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) "
 
     result = dict()
@@ -2340,9 +2352,7 @@ def siskamtibmas_delete():
         result['row_affected'] = cursor.rowcount
         result['valid'] = 0
     finally:
-
         cursor.close()
-
     cursor.close()
     return result
 
@@ -2351,7 +2361,7 @@ def siskamtibmas_read():
     db = get_db()
     cursor = db.cursor(dictionary=True)
     id = request.json.get('id')
-    query = "SELECT siskamtibmas.id, no_laporan, tgl_laporan, approved_by, date_submitted, date_approved, status, dasar, lainlain,penutup, meta, " \
+    query = "SELECT siskamtibmas.id, no_laporan, tgl_laporan, siskamtibmas.approved_by, siskamtibmas.date_submitted, siskamtibmas.date_approved, siskamtibmas.status, siskamtibmas.dasar, siskamtibmas.lainlain,siskamtibmas.penutup, meta, " \
             "data_siskamtibmas.region_id, region.region_name, region.image, data_siskamtibmas.a, data_siskamtibmas.b, data_siskamtibmas.c, data_siskamtibmas.d, " \
             "data_siskamtibmas.e, data_siskamtibmas.f, data_siskamtibmas.g, data_siskamtibmas.h, data_siskamtibmas.i from siskamtibmas " \
             "left join data_siskamtibmas on siskamtibmas_id = siskamtibmas.id left join region on data_siskamtibmas.region_id = region.id WHERE siskamtibmas.id = %s"
