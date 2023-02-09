@@ -19,7 +19,7 @@
 #
 
 # use 5050 in production. 5000 is for nginx reverse proxy
-bind = '0.0.0.0:5050'
+bind = '0.0.0.0:5000'
 backlog = 2048
 
 #

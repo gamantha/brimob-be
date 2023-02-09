@@ -1593,12 +1593,14 @@ def laporan_giat_list():
     # date_submitted = request.json.get('date_submitted')
     # date_approved = request.json.get('date_approved')
     # status = request.json.get('status')
-    query = "SELECT laporan_giat.id, laporan_giat.user_id, user.username, laporan_giat.region_id, region.region_name, laporan_giat.department_id, department.department_name, no_laporan, " \
-            "tgl_laporan, DATE_FORMAT(tgl_laporan, '%e/%m/%Y') as tgl_for_search, lat_pelapor, long_pelapor, laporan_giat.alamat, laporan_text, laporan_subcategory_id, subkategori.sub_kategori, image_file, laporan_giat.tgl_submitted FROM laporan_giat " \
+    query = "SELECT laporan_giat.id, laporan_giat.user_id, user.username, user_data.nama, user_data.pangkat, laporan_giat.region_id, region.region_name, " \
+            "laporan_giat.department_id, department.department_name, no_laporan, " \
+            "tgl_laporan, DATE_FORMAT(tgl_laporan, '%d/%m/%Y') as tgl_for_search, lat_pelapor, long_pelapor, laporan_giat.alamat, laporan_text, laporan_subcategory_id, subkategori.sub_kategori, image_file, laporan_giat.tgl_submitted FROM laporan_giat " \
             "LEFT JOIN region ON region.id = laporan_giat.region_id " \
             "LEFT JOIN subkategori ON subkategori.idsubkategori = laporan_giat.laporan_subcategory_id " \
             "LEFT JOIN department ON department.id = laporan_giat.department_id " \
-            "LEFT JOIN user ON user.iduser = laporan_giat.user_id "
+            "LEFT JOIN user ON user.iduser = laporan_giat.user_id" \
+            "LEFT JOIN user_data on user_data.iduser = laporan_giat.user_id "
     cursor.execute(query)
     record = cursor.fetchall()
     cursor.close()
@@ -1613,11 +1615,12 @@ def laporan_giat_list_harian():
     date = request.json.get('date')
     laporan_subcategory_id = request.json.get('laporan_subcategory_id')
     # status = request.json.get('status')
-    query = "SELECT laporan_giat.id, laporan_giat.user_id, user.username, laporan_giat.region_id, region.region_name, laporan_giat.department_id, department.department_name, no_laporan, " \
-            "tgl_laporan, DATE_FORMAT(tgl_laporan, '%e/%m/%Y') as tgl_for_search, lat_pelapor, long_pelapor, laporan_giat.alamat, laporan_text, laporan_subcategory_id, subkategori.sub_kategori, image_file, laporan_giat.tgl_submitted FROM laporan_giat " \
+    query = "SELECT laporan_giat.id, laporan_giat.user_id, user.username,  user_data.nama, user_data.pangkat, laporan_giat.region_id, region.region_name, laporan_giat.department_id, department.department_name, no_laporan, " \
+            "tgl_laporan, DATE_FORMAT(tgl_laporan, '%d/%m/%Y') as tgl_for_search, lat_pelapor, long_pelapor, laporan_giat.alamat, laporan_text, laporan_subcategory_id, subkategori.sub_kategori, image_file, laporan_giat.tgl_submitted FROM laporan_giat " \
             "LEFT JOIN region ON region.id = laporan_giat.region_id " \
             "LEFT JOIN subkategori ON subkategori.idsubkategori = laporan_giat.laporan_subcategory_id " \
             "LEFT JOIN department ON department.id = laporan_giat.department_id " \
+            "LEFT JOIN user_data on user_data.iduser = laporan_giat.user_id " \
             "LEFT JOIN user ON user.iduser = laporan_giat.user_id WHERE DATE(laporan_giat.tgl_submitted) = DATE('"+ date +"') AND laporan_giat.laporan_subcategory_id = '"+laporan_subcategory_id+"'"
     cursor.execute(query)
     record = cursor.fetchall()
