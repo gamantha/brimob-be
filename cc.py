@@ -1586,6 +1586,24 @@ def laporan_giat_user():
 
 
 
+
+@cc_blueprint.route('/laporan_giat_summary', methods=["GET"])
+def laporan_giat_summary():
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    queryall = "select count(id) as 'count', laporan_subcategory_id from laporan_giat where tgl_submitted >= DATE_SUB(CURDATE(), INTERVAL 1 week) GROUP BY laporan_subcategory_id"
+    query1week = "select count(id) as 'count', laporan_subcategory_id from laporan_giat GROUP BY laporan_subcategory_id"
+    cursor.execute(queryall)
+    record = cursor.fetchall()
+    cursor.execute(query1week)
+    record2 = cursor.fetchall()
+    cursor.close()
+    result = dict()
+    result['all'] = record
+    result['week'] = record2
+    return jsonify(result)
+
+
 @cc_blueprint.route('/laporan_giat_list', methods=["GET"])
 def laporan_giat_list():
     db = get_db()
@@ -1646,7 +1664,8 @@ def laporan_giat_submit():
     alamat = request.json.get('alamat')
     image_file = request.json.get('image_file')
     formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
-
+    print('formatted date ')
+    print(formatted_date)
     ts = time.time()
     # no_laporan = str(user_id) + "-" + str(laporan_subcategory_id) + "-" + os.path.splitext(str(ts))[0]
     no_laporan = str(user_id) + str(laporan_subcategory_id) + os.path.splitext(str(ts))[0]
