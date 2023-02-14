@@ -1591,8 +1591,8 @@ def laporan_giat_user():
 def laporan_giat_summary():
     db = get_db()
     cursor = db.cursor(dictionary=True)
-    queryall = "select count(id) as 'count', laporan_subcategory_id from laporan_giat where tgl_submitted >= DATE_SUB(CURDATE(), INTERVAL 1 week) GROUP BY laporan_subcategory_id"
-    query1week = "select count(id) as 'count', laporan_subcategory_id from laporan_giat GROUP BY laporan_subcategory_id"
+    queryall = "select count(region.id) as 'count', region_name, laporan_subcategory_id from laporan_giat LEFT JOIN region on region.id = region_id where tgl_submitted >= DATE_SUB(CURDATE(), INTERVAL 1 week) GROUP BY region_id, laporan_subcategory_id"
+    query1week = "select count(region.id) as 'count', region_name, laporan_subcategory_id from laporan_giat LEFT JOIN region on region.id = region_id GROUP BY region_id,laporan_subcategory_id"
     cursor.execute(queryall)
     record = cursor.fetchall()
     cursor.execute(query1week)
