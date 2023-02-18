@@ -1606,8 +1606,8 @@ def laporan_giat_summary():
     return jsonify(result)
 
 
-@cc_blueprint.route('/laporan_giat_list', methods=["GET"])
-def laporan_giat_list():
+@cc_blueprint.route('/laporan_giat_list2', methods=["GET"])
+def laporan_giat_list2():
     db = get_db()
     cursor = db.cursor(dictionary=True)
     # date_submitted = request.json.get('date_submitted')
@@ -1617,6 +1617,29 @@ def laporan_giat_list():
             "laporan_giat.department_id, department.department_name, no_laporan, " \
             "DATE_FORMAT(laporan_giat.tgl_laporan, '%Y-%m-%d %H:%i:%S') as tgl_laporan, DATE_FORMAT(tgl_laporan, '%d/%m/%Y') as tgl_for_search, DATE_FORMAT(laporan_giat.tgl_submitted, '%Y-%m-%d %H:%i:%S') as tgl_submitted, " \
             "lat_pelapor, long_pelapor, laporan_giat.alamat, " \
+            "laporan_text, laporan_subcategory_id, subkategori.sub_kategori, image_file FROM laporan_giat " \
+            "LEFT JOIN region ON region.id = laporan_giat.region_id " \
+            "LEFT JOIN subkategori ON subkategori.idsubkategori = laporan_giat.laporan_subcategory_id " \
+            "LEFT JOIN department ON department.id = laporan_giat.department_id " \
+            "LEFT JOIN user ON user.iduser = laporan_giat.user_id " \
+            "LEFT JOIN user_data on user_data.iduser = laporan_giat.user_id "
+    cursor.execute(query)
+    record = cursor.fetchall()
+    cursor.close()
+    result = dict()
+    result = record
+    return jsonify(result)
+
+@cc_blueprint.route('/laporan_giat_list', methods=["GET"])
+def laporan_giat_list():
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    # date_submitted = request.json.get('date_submitted')
+    # date_approved = request.json.get('date_approved')
+    # status = request.json.get('status')
+    query = "SELECT laporan_giat.id, laporan_giat.user_id, user.username, user_data.nama, user_data.pangkat, laporan_giat.region_id, region.region_name, " \
+            "laporan_giat.department_id, department.department_name, no_laporan, " \
+            "tgl_laporan, DATE_FORMAT(tgl_laporan, '%d/%m/%Y') as tgl_for_search, DATE_FORMAT(laporan_giat.tgl_submitted, '%Y-%m-%d %H:%i:%S') as tgl_submitted, lat_pelapor, long_pelapor, laporan_giat.alamat, " \
             "laporan_text, laporan_subcategory_id, subkategori.sub_kategori, image_file FROM laporan_giat " \
             "LEFT JOIN region ON region.id = laporan_giat.region_id " \
             "LEFT JOIN subkategori ON subkategori.idsubkategori = laporan_giat.laporan_subcategory_id " \
