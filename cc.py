@@ -1639,7 +1639,7 @@ def laporan_giat_list():
     # status = request.json.get('status')
     query = "SELECT laporan_giat.id, laporan_giat.user_id, user.username, user_data.nama, user_data.pangkat, laporan_giat.region_id, region.region_name, " \
             "laporan_giat.department_id, department.department_name, no_laporan, " \
-            "tgl_laporan, DATE_FORMAT(tgl_laporan, '%d/%m/%Y') as tgl_for_search, DATE_FORMAT(laporan_giat.tgl_submitted, '%Y-%m-%d %H:%i:%S') as tgl_submitted, lat_pelapor, long_pelapor, laporan_giat.alamat, " \
+            "tgl_laporan, DATE_FORMAT(tgl_laporan, '%d/%m/%Y') as tgl_for_search, tgl_submitted, lat_pelapor, long_pelapor, laporan_giat.alamat, " \
             "laporan_text, laporan_subcategory_id, subkategori.sub_kategori, image_file FROM laporan_giat " \
             "LEFT JOIN region ON region.id = laporan_giat.region_id " \
             "LEFT JOIN subkategori ON subkategori.idsubkategori = laporan_giat.laporan_subcategory_id " \
