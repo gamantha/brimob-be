@@ -1645,7 +1645,7 @@ def laporan_giat_list():
             "LEFT JOIN subkategori ON subkategori.idsubkategori = laporan_giat.laporan_subcategory_id " \
             "LEFT JOIN department ON department.id = laporan_giat.department_id " \
             "LEFT JOIN user ON user.iduser = laporan_giat.user_id " \
-            "LEFT JOIN user_data on user_data.iduser = laporan_giat.user_id "
+            "LEFT JOIN user_data on user_data.iduser = laporan_giat.user_id ORDER BY laporan_giat.id DESC"
     cursor.execute(query)
     record = cursor.fetchall()
     cursor.close()
