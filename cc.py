@@ -3293,7 +3293,7 @@ def laporan_giat_list_peruser():
     # status = request.json.get('status')
     query = "SELECT laporan_giat.id, laporan_giat.user_id, user.username, user_data.nama, laporan_giat.region_id, " \
             "region.region_name, laporan_giat.department_id, department.department_name, no_laporan, " \
-            "tgl_submitted, lat_pelapor, long_pelapor, " \
+            "DATE_FORMAT(tgl_submitted, '%a, %d %b %Y %H:%i:%S WIB') as tgl_submitted, lat_pelapor, long_pelapor, " \
             "laporan_giat.alamat, laporan_text, laporan_subcategory_id, subkategori.sub_kategori, image_file FROM laporan_giat " \
             "LEFT JOIN region ON region.id = laporan_giat.region_id " \
             "LEFT JOIN subkategori ON subkategori.idsubkategori = laporan_giat.laporan_subcategory_id " \
@@ -3307,7 +3307,29 @@ def laporan_giat_list_peruser():
     result = record
     return jsonify(result)
 
-
+@cc_blueprint.route('/laporan_giat_list_peruser2', methods=["POST"])
+def laporan_giat_list_peruser2():
+    print('laporan giat list peruser2');
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    userid = request.json.get('user_id')
+    # laporan_subcategory_id = request.json.get('laporan_subcategory_id')
+    # status = request.json.get('status')
+    query = "SELECT laporan_giat.id, laporan_giat.user_id, user.username, user_data.nama, laporan_giat.region_id, " \
+            "region.region_name, laporan_giat.department_id, department.department_name, no_laporan, " \
+            "tgl_submitted, lat_pelapor, long_pelapor, " \
+            "laporan_giat.alamat, laporan_text, laporan_subcategory_id, subkategori.sub_kategori, image_file FROM laporan_giat " \
+            "LEFT JOIN region ON region.id = laporan_giat.region_id " \
+            "LEFT JOIN subkategori ON subkategori.idsubkategori = laporan_giat.laporan_subcategory_id " \
+            "LEFT JOIN user ON user.iduser = laporan_giat.user_id " \
+            "LEFT JOIN user_data ON user_data.iduser = laporan_giat.user_id " \
+            "LEFT JOIN department ON department.id = laporan_giat.department_id WHERE laporan_giat.user_id = %s AND laporan_giat.laporan_subcategory_id IN (%s, %s) ORDER BY laporan_giat.id DESC"
+    cursor.execute(query, (userid,'4','5'))
+    record = cursor.fetchall()
+    cursor.close()
+    result = dict()
+    result = record
+    return jsonify(result)
 
 
 @cc_blueprint.route('/laporan_print', methods=["POST"])
