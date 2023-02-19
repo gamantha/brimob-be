@@ -2429,7 +2429,7 @@ def siskamtibmas_read_all():
     cursor = db.cursor(dictionary=True)
     offset = request.json.get('offset')
     limit = request.json.get('limit')
-    query = "SELECT id, no_laporan, tgl_laporan, approved_by, date_submitted, date_approved, status, dasar, lainlain,penutup, meta from siskamtibmas order by id desc limit %s, %s"
+    query = "SELECT id, no_laporan, tgl_laporan, approved_by, DATE_FORMAT(date_submitted, '%a, %d %b %Y %H:%i:%S WIB') as date_submitted, date_approved, status, dasar, lainlain,penutup, meta from siskamtibmas order by id desc limit %s, %s"
     cursor.execute(query,(offset,limit,))
     record = cursor.fetchall()
     cursor.close()
