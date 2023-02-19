@@ -1958,7 +1958,7 @@ def data_siap_gerak_region():
     cursor = db.cursor(dictionary=True)
     region_id = request.json.get('region_id')
 
-    query = "select data_siap_gerak.id, tanggal, region_id, region.region_name, region_custom_name, jumlah_riil, jumlah_pelaksana_tugas, jumlah_siap_opsnal, siap_opsnal, jumlah_siap_opsnal2, siap_opsnal2, jumlah_standby, jumlah_cadangan, keterangan, data_siap_gerak.status from data_siap_gerak left join region on region_id = region.id where region_id = %s order by data_siap_gerak.id desc"
+    query = "select data_siap_gerak.id, DATE_FORMAT(tanggal, '%a, %d %b %Y %H:%i:%S WIB') as tanggal, region_id, region.region_name, region_custom_name, jumlah_riil, jumlah_pelaksana_tugas, jumlah_siap_opsnal, siap_opsnal, jumlah_siap_opsnal2, siap_opsnal2, jumlah_standby, jumlah_cadangan, keterangan, data_siap_gerak.status from data_siap_gerak left join region on region_id = region.id where region_id = %s order by data_siap_gerak.id desc"
     cursor.execute(query, (region_id,))
     record = cursor.fetchall()
     return jsonify(record)
@@ -2258,7 +2258,7 @@ def data_siskamtibmas_read_bydate():
     db = get_db()
     tanggal = request.json.get('tanggal')
     cursor = db.cursor(dictionary=True)
-    query = "select data_siskamtibmas.id,tanggal,siskamtibmas_id, region_id,region.region_name, a, b, c, d, e, f, g, h, i, " \
+    query = "select data_siskamtibmas.id,DATE_FORMAT(tanggal, '%a, %d %b %Y %H:%i:%S WIB') as tanggal,siskamtibmas_id, region_id,region.region_name, a, b, c, d, e, f, g, h, i, " \
             "a_total, b_total, c_total, d_total, e_total, f_total ,g_total, h_total, i_total, status " \
             "from data_siskamtibmas left join region on data_siskamtibmas.region_id = region.id where tanggal = %s order by tanggal DESC"
     cursor.execute(query,(tanggal,))
@@ -2276,7 +2276,7 @@ def data_siskamtibmas_read_region():
     region_id = request.json.get('region_id')
     cursor = db.cursor(dictionary=True)
 
-    query = "select data_siskamtibmas.id,tanggal,siskamtibmas_id, region_id,region.region_name, a, b, c, d, e, f, g, h, i, " \
+    query = "select data_siskamtibmas.id,DATE_FORMAT(tanggal, '%a, %d %b %Y %H:%i:%S WIB') as tanggal,siskamtibmas_id, region_id,region.region_name, a, b, c, d, e, f, g, h, i, " \
             "a_total, b_total, c_total, d_total, e_total, f_total ,g_total, h_total, i_total, status " \
             "from data_siskamtibmas left join region on data_siskamtibmas.region_id = region.id where region_id = %s order by tanggal DESC"
     cursor.execute(query,(region_id,))
