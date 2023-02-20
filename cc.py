@@ -1408,8 +1408,8 @@ def upload_file():
             cursor = db.cursor(dictionary=True)
             # get the last rate & feedback - the latest ID
             formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
-            query = "INSERT INTO file_uploads (file_name, file_type, laporan_no, laporan_subcategory_id, user_id, date_submitted) VALUES (%s, %s, %s, %s, %s, %s)"
-            cursor.execute(query, (newfilename, "file", laporan_no, laporan_subcategory_id, user_id, formatted_date,))
+            query = "INSERT INTO file_uploads (file_name, file_type, laporan_no, laporan_subcategory_id, user_id, date_submitted) VALUES (%s, %s, %s, %s, %s, NOW())"
+            cursor.execute(query, (newfilename, "file", laporan_no, laporan_subcategory_id, user_id,))
             db.commit()
             res['valid'] = '1'
             # res['thumb_path'] ='https://ccntmc.1500669.com/ntmc_upload/'.$uploadfile
@@ -1697,11 +1697,11 @@ def laporan_giat_submit():
     ts = time.time()
     # no_laporan = str(user_id) + "-" + str(laporan_subcategory_id) + "-" + os.path.splitext(str(ts))[0]
     no_laporan = str(user_id) + str(laporan_subcategory_id) + os.path.splitext(str(ts))[0]
-    query = "INSERT INTO laporan_giat (user_id, region_id, department_id, no_laporan, tgl_laporan, laporan_text,  lat_pelapor, long_pelapor, alamat, laporan_subcategory_id, image_file, tgl_submitted) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) "
+    query = "INSERT INTO laporan_giat (user_id, region_id, department_id, no_laporan, tgl_laporan, laporan_text,  lat_pelapor, long_pelapor, alamat, laporan_subcategory_id, image_file, tgl_submitted) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, NOW()) "
 
     result = dict()
     print("laporan giat review")
-    cursor.execute(query, (str(user_id),str(region_id),str(department_id),str(no_laporan), tgl_laporan, laporan_text,str(lat_pelapor),str(long_pelapor),str(alamat),str(laporan_subcategory_id),image_file,formatted_date))
+    cursor.execute(query, (str(user_id),str(region_id),str(department_id),str(no_laporan), tgl_laporan, laporan_text,str(lat_pelapor),str(long_pelapor),str(alamat),str(laporan_subcategory_id),image_file))
     try:
         db.commit()
     except mysql.connector.Error as error:
@@ -3227,10 +3227,10 @@ def create_laporan():
         no_laporan_string = str(date.today().year) + "-" + str(subkategoriid) + "-" + str(region_id)
     print(no_laporan_string)
     formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
-    query = "INSERT IGNORE INTO laporan_published (no_laporan, tgl_laporan, region_id, department_id, laporan_subcategory_id, date_submitted) VALUES (%s,%s, %s, %s, %s, %s)"
+    query = "INSERT IGNORE INTO laporan_published (no_laporan, tgl_laporan, region_id, department_id, laporan_subcategory_id, date_submitted) VALUES (%s,%s, %s, %s, %s, NOW())"
     try:
         print("in try")
-        cursor.execute(query,(no_laporan_string, tgl_laporan, region_id, department_id, subkategoriid, formatted_date,))
+        cursor.execute(query,(no_laporan_string, tgl_laporan, region_id, department_id, subkategoriid,))
         db.commit()
         result = dict()
         print(tgl_laporan)
@@ -3499,9 +3499,9 @@ def submit_laporan_data_list():
     db = get_db()
     cursor = db.cursor(dictionary=True)
     for x in data:
-        query = "INSERT INTO data_laporan (tgl_laporan, user_id, lat_pelapor, long_pelapor, region_id, department_id, data_laporan_subcategory_id, laporan_total, laporan_text, tgl_submitted) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s) " \
+        query = "INSERT INTO data_laporan (tgl_laporan, user_id, lat_pelapor, long_pelapor, region_id, department_id, data_laporan_subcategory_id, laporan_total, laporan_text, tgl_submitted) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, NOW()) " \
                 "ON DUPLICATE KEY UPDATE lat_pelapor = %s, long_pelapor = %s, laporan_total = %s, laporan_text = %s"
-        cursor.execute(query, (tgl_laporan, user_id, lat_pelapor, long_pelapor, region_id, department_id, x['data_laporan_subcategory_id'],x['laporan_total'],x['laporan_text'], formatted_date, lat_pelapor, long_pelapor,x['laporan_total'],x['laporan_text']))
+        cursor.execute(query, (tgl_laporan, user_id, lat_pelapor, long_pelapor, region_id, department_id, x['data_laporan_subcategory_id'],x['laporan_total'],x['laporan_text'], lat_pelapor, long_pelapor,x['laporan_total'],x['laporan_text']))
     result = dict()
     print(tgl_laporan)
     try:
