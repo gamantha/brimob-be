@@ -2542,6 +2542,10 @@ def wakil_image_download():
     return send_from_directory(app.config["UPLOAD_WAKIL_FOLDER"], image_name)
 
 
+@cc_blueprint.route('/wakil_image_download_ios', methods=["GET"])
+def wakil_image_download_ios():
+    image_name = request.args.get("image_name", None)
+    return send_from_directory(app.config["UPLOAD_WAKIL_FOLDER"], image_name)
 
 
 
