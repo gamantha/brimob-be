@@ -141,9 +141,9 @@ def chart_1n():
 
     db2 = get_db2()
     cursor = db2.cursor(dictionary=True)
-    query = "select tgl_laporan, region_id, region.region_name, laporan_subcategory_id, count(laporan_giat.id) as 'jumlah' " \
-            "from laporan_giat join region on laporan_giat.region_id = region.id join subkategori on subkategori.idsubkategori = laporan_giat.laporan_subcategory_id " \
-            "where tgl_submitted >= DATE_SUB(CURDATE(), INTERVAL 1 week) GROUP BY tgl_laporan, region_id, laporan_subcategory_id ORDER BY tgl_laporan, region_id"
+    query = "select tgl_laporan, laporan_subcategory_id, count(laporan_giat.id) as 'jumlah' " \
+            "from laporan_giat join subkategori on subkategori.idsubkategori = laporan_giat.laporan_subcategory_id " \
+            "where tgl_submitted >= DATE_SUB(CURDATE(), INTERVAL 1 week) GROUP BY tgl_laporan, laporan_subcategory_id ORDER BY tgl_laporan, region_id"
 
     cursor.execute(query,)
     record = cursor.fetchall()
