@@ -29,6 +29,7 @@ from mobile import mobile_blueprint
 from ntmc_mobile import ntmc_mobile_blueprint
 from cc import cc_blueprint
 from admin import admin_blueprint
+from chart import chart_blueprint
 
 from sqlalchemy import create_engine
 from werkzeug.utils import secure_filename
@@ -53,7 +54,7 @@ app.register_blueprint(mobile_blueprint)
 app.register_blueprint(ntmc_mobile_blueprint)
 app.register_blueprint(cc_blueprint)
 app.register_blueprint(admin_blueprint)
-
+app.register_blueprint(chart_blueprint)
 logging.basicConfig(filename='record.log', level=logging.DEBUG, format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
 
 
