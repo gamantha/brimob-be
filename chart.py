@@ -36,7 +36,7 @@ from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
-from datetime import datetime
+from datetime import datetime, timedelta
 now = datetime.now()
 from flask import send_from_directory
 
@@ -148,6 +148,18 @@ def chart_1n():
     cursor.execute(query,)
     record = cursor.fetchall()
     result = dict()
-    result['data'] = record
+    result['data']=dict()
+    today = date.today()
+    daysback = 7;
+    while daysback >= 1:
+        date2 = today - timedelta(days = daysback)
+        # print(date2)
+        result['data'][date2.strftime("%m/%d/%Y")] = dict()
+        result['data'][date2.strftime("%m/%d/%Y")] = dict()
+        daysback -= 1
+    for data in record :
+        print(data['tgl_laporan'])
+    # print(today)
+    # result['data'] = record
     # result['count'] = cursor.rowcount
     return jsonify(result)

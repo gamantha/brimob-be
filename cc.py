@@ -1726,7 +1726,7 @@ def siap_gerak_read():
     siap_gerak_id = request.json.get('siap_gerak_id')
     cursor = db.cursor(dictionary=True)
     query = "select id,title, tanggal_laporan, notes1, notes2, status, approved, approved_by, approved_at, kop_1, kop_2, `user`.username " \
-            "from siap_gerak left join user on approved_by = user.iduser"
+            "from siap_gerak left join user on approved_by = user.iduser order by tanggal_laporan DESC"
     cursor.execute(query,)
     record = cursor.fetchall()
     cursor.close()
