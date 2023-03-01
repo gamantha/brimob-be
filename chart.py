@@ -192,3 +192,17 @@ def chart_1():
     # result['data'] = record
     # result['count'] = cursor.rowcount
     return jsonify(result)
+
+
+@chart_blueprint.route('/chart_3', methods=["GET"])
+def chart_3():
+    db2 = get_db2()
+    cursor = db2.cursor(dictionary=True)
+    query = "select *, region.region_name from data_siap_gerak left join region on region.id = region_id where data_siap_gerak.id in (select MAX(id) as id from data_siap_gerak GROUP BY region_id) ORDER BY region_id"
+
+    cursor.execute(query,)
+    record = cursor.fetchall()
+    result = dict()
+    result['data'] = record
+    # result['count'] = cursor.rowcount
+    return jsonify(result)
