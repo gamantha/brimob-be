@@ -137,28 +137,57 @@ def chart():
 
 
 @chart_blueprint.route('/chart_1', methods=["GET"])
-def chart_1n():
+def chart_1():
 
     db2 = get_db2()
     cursor = db2.cursor(dictionary=True)
-    query = "select tgl_laporan, laporan_subcategory_id, count(laporan_giat.id) as 'jumlah' " \
+    query = "select  DATE_FORMAT(tgl_laporan, '%m/%d/%Y') as tanggal, laporan_subcategory_id, count(laporan_giat.id) as 'jumlah' " \
             "from laporan_giat join subkategori on subkategori.idsubkategori = laporan_giat.laporan_subcategory_id " \
             "where tgl_submitted >= DATE_SUB(CURDATE(), INTERVAL 1 week) GROUP BY tgl_laporan, laporan_subcategory_id ORDER BY tgl_laporan, region_id"
 
     cursor.execute(query,)
     record = cursor.fetchall()
     result = dict()
-    result['data']=dict()
+    result['data']=[]
     today = date.today()
     daysback = 7;
+    container = {}
+    for data in record :
+        # print(data['tanggal'])
+        # print(data['jumlah'])
+        # print(data['laporan_subcategory_id'])
+        container[data['tanggal']] = {
+            'jumlah' : data['jumlah'],
+            'laporan_subcategory_id' : data['laporan_subcategory_id']
+        }
+
+    print(container)
     while daysback >= 1:
         date2 = today - timedelta(days = daysback)
         # print(date2)
-        result['data'][date2.strftime("%m/%d/%Y")] = dict()
-        result['data'][date2.strftime("%m/%d/%Y")] = dict()
+        datatoappend_4 = dict()
+        datatoappend_4['tanggal'] = date2.strftime("%m/%d/%Y")
+        datatoappend_4['laporan_subcategory_id'] = 4
+
+        datatoappend_5 = dict()
+        datatoappend_5['tanggal'] = datatoappend_4['tanggal']
+        datatoappend_5['laporan_subcategory_id'] = 5
+
+        if datatoappend_4['tanggal'] in container :
+            datatoappend_4['jumlah'] = 0
+            datatoappend_5['jumlah'] = 0
+            if container[datatoappend_4['tanggal']]['laporan_subcategory_id'] == 4 :
+                datatoappend_4['jumlah'] = container[datatoappend_5['tanggal']]['jumlah'] if container[datatoappend_4['tanggal']]['jumlah'] else 0
+            elif container[datatoappend_5['tanggal']]['laporan_subcategory_id'] == 5 :
+                datatoappend_5['jumlah'] = container[datatoappend_5['tanggal']]['jumlah'] if container[datatoappend_5['tanggal']]['jumlah'] else 0
+        else :
+            datatoappend_4['jumlah'] = 0
+            datatoappend_5['jumlah'] = 0
+        result['data'].append(datatoappend_4)
+        result['data'].append(datatoappend_5)
         daysback -= 1
-    for data in record :
-        print(data['tgl_laporan'])
+    # print(container)
+    # print(container['02/22/2023']['jumlah'])
     # print(today)
     # result['data'] = record
     # result['count'] = cursor.rowcount
