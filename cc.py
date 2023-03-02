@@ -303,8 +303,8 @@ def login_user():
 
 def authenticate_user(username, password):
 
-    r.set("France", "Paris");
-    print(r.get("France"));
+    # r.set("France", "Paris");
+    # print(r.get("France"));
     db = get_db()
     cursor = db.cursor(dictionary=True)
 
