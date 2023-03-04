@@ -3725,3 +3725,106 @@ def operasi_anggota_delete():
 
     cursor.close()
     return result
+
+@cc_blueprint.route('/onoffduty', methods=["GET"])
+@jwt_required()
+def onoffduty():
+    print('on_off_duty');
+    user_id = get_jwt_identity()
+    lat = request.args.get("lat", None)
+    lon = request.args.get("lon", None)
+    onoff = request.args.get("onoff", None)
+
+    db2 = get_db2()
+    cursor = db2.cursor(dictionary=True,buffered=True)
+    # timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
+
+    query = "select * from duties where user_id = %s order by id desc"
+    cursor.execute(query,(user_id,))
+    record = cursor.fetchone()
+    result = dict()
+    print(record)
+    if record != None:
+        if record['offduty'] == None :
+            print('update')
+            query = "UPDATE duties SET duties.offduty = NOW(), duties.lat_2 = %s, duties.lon_2 = %s where duties.id = %s"
+            cursor.execute(query, (lat, lon,record['id'],))
+            try:
+                db2.commit()
+            except mysql.connector.Error as error:
+                print("Failed to update record to database rollback: {}".format(error))
+                # reverting changes because of exception
+                cursor.rollback()
+                result['result'] = 'failed'
+                result['valid'] = 2
+            finally:
+
+                cursor.close()
+                result['result'] = 'success'
+                result['valid'] = 1
+        else :
+            print('create new')
+            query = "INSERT INTO duties (user_id, onduty, lat_1, lon_1) VALUES (%s, NOW(), %s, %s)"
+            cursor.execute(query, (user_id, lat, lon,))
+            try:
+                db2.commit()
+            except mysql.connector.Error as error:
+                print("Failed to update record to database rollback: {}".format(error))
+                # reverting changes because of exception
+                cursor.rollback()
+                result['result'] = 'failed'
+                result['valid'] = 2
+            finally:
+
+                cursor.close()
+                result['result'] = 'success'
+                result['valid'] = 1
+    else:
+        query = "INSERT INTO duties (user_id, onduty, lat_1, lon_1) VALUES (%s, NOW(), %s, %s)"
+        cursor.execute(query, (user_id, lat, lon,))
+        try:
+            db2.commit()
+        except mysql.connector.Error as error:
+            print("Failed to update record to database rollback: {}".format(error))
+            # reverting changes because of exception
+            cursor.rollback()
+            result['result'] = 'failed'
+            result['valid'] = 2
+        finally:
+
+            cursor.close()
+            result['result'] = 'success'
+            result['valid'] = 1
+    cursor.close()
+    return result
+
+
+@cc_blueprint.route('/getduty', methods=["GET"])
+@jwt_required()
+def getduty():
+    print('get_duty');
+    user_id = get_jwt_identity()
+
+    db2 = get_db2()
+    cursor = db2.cursor(dictionary=True,buffered=True)
+
+
+    query = "select * from duties where user_id = %s order by id desc"
+    cursor.execute(query,(user_id,))
+    record = cursor.fetchone()
+    result = dict()
+    if record == None:
+        print("none")
+        result['data'] = None;
+        result['latest_status'] = 'off'
+    else:
+        if record['offduty'] == None:
+            print('status = on')
+            result['latest_status'] = 'on'
+        else:
+            print('status = off')
+            result['latest_status'] = 'off'
+        result['data'] = record
+        print(record)
+        cursor.close()
+    return result
