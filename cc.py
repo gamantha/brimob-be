@@ -3828,3 +3828,108 @@ def getduty():
         print(record)
         cursor.close()
     return result
+
+
+@cc_blueprint.route('/getpanic', methods=["GET"])
+@jwt_required()
+def getpanic():
+    print('get_panic');
+    user_id = get_jwt_identity()
+
+    db2 = get_db2()
+    cursor = db2.cursor(dictionary=True,buffered=True)
+
+
+    query = "select * from panics where user_id = %s order by id desc"
+    cursor.execute(query,(user_id,))
+    record = cursor.fetchone()
+    result = dict()
+    if record == None:
+        print("none - belum pernah ada panic")
+        result['data'] = None;
+        result['latest_status'] = 'off'
+    else:
+        #sudah pernah ada panic
+        if record['off'] == None:
+            print('status = on')
+            result['latest_status'] = 'on'
+        else:
+            #berarti panic button sudah dimatikan
+            print('status = off')
+            result['latest_status'] = 'off'
+        result['data'] = record
+        print(record)
+        cursor.close()
+    return result
+
+
+@cc_blueprint.route('/paniconoff', methods=["GET"])
+@jwt_required()
+def paniconoff():
+    print('on_off_panic');
+    user_id = get_jwt_identity()
+    reason = request.args.get("reason", None)
+
+    db2 = get_db2()
+    cursor = db2.cursor(dictionary=True,buffered=True)
+    # timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
+
+    query = "select * from panics where user_id = %s order by id desc"
+    cursor.execute(query,(user_id,))
+    record = cursor.fetchone()
+    result = dict()
+    print(record)
+    if record != None:
+        if record['off'] == None :
+            print('update')
+            query = "UPDATE panics SET panics.off = NOW(), panics.reason = %s, panics.closer_id = %s where panics.id = %s"
+            cursor.execute(query, (reason, user_id,record['id'],))
+            try:
+                db2.commit()
+            except mysql.connector.Error as error:
+                print("Failed to update record to database rollback: {}".format(error))
+                # reverting changes because of exception
+                cursor.rollback()
+                result['result'] = 'failed'
+                result['valid'] = 2
+            finally:
+
+                cursor.close()
+                result['result'] = 'success'
+                result['valid'] = 1
+        else :
+            print('create new')
+            query = "INSERT INTO panics (user_id, panics.on) VALUES (%s, NOW())"
+            cursor.execute(query, (user_id,))
+            try:
+                db2.commit()
+            except mysql.connector.Error as error:
+                print("Failed to update record to database rollback: {}".format(error))
+                # reverting changes because of exception
+                cursor.rollback()
+                result['result'] = 'failed'
+                result['valid'] = 2
+            finally:
+
+                cursor.close()
+                result['result'] = 'success'
+                result['valid'] = 1
+    else:
+        query = "INSERT INTO panics (user_id, panics.on) VALUES (%s, NOW())"
+        cursor.execute(query, (user_id,))
+        try:
+            db2.commit()
+        except mysql.connector.Error as error:
+            print("Failed to update record to database rollback: {}".format(error))
+            # reverting changes because of exception
+            cursor.rollback()
+            result['result'] = 'failed'
+            result['valid'] = 2
+        finally:
+
+            cursor.close()
+            result['result'] = 'success'
+            result['valid'] = 1
+    cursor.close()
+    return result
+
