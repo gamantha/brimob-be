@@ -277,6 +277,18 @@ def get_tracker_device():
     record = cursor.fetchone()
     return record
 
+@cc_blueprint.route('/get_tracker_ranmor_byregion', methods=["POST"])
+def get_tracker_ranmor_byregion():
+
+    region_id = request.json.get("region_id", None)
+    db2 = get_db2()
+    cursor = db2.cursor(dictionary=True)
+    query = "select * from ranmor where region_id = %s"
+
+    cursor.execute(query,(region_id,))
+    record = cursor.fetchall()
+    return jsonify(record)
+
 
 
 @cc_blueprint.route('/get_tracker_loc', methods=["POST"])
