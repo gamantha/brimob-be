@@ -308,6 +308,17 @@ def get_tracker_ranmor_byregion():
     record = cursor.fetchall()
     return jsonify(record)
 
+@cc_blueprint.route('/get_tracker_ranmor_all', methods=["GET"])
+def get_tracker_ranmor_all():
+
+    db2 = get_db2()
+    cursor = db2.cursor(dictionary=True)
+    query = "select * from ranmor left join region on ranmor.region_id = region.id"
+
+    cursor.execute(query,)
+    record = cursor.fetchall()
+    return jsonify(record)
+
 
 
 @cc_blueprint.route('/get_tracker_loc', methods=["POST"])
