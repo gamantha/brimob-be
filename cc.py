@@ -212,7 +212,7 @@ def get_tracker_activeuser_all():
 
     db2 = get_db2()
     cursor = db2.cursor(dictionary=True)
-    query = "select tracker_user.id, tracker_user.iduser, user.username, user_data.nama, user_data.pangkat, region.region_name, department.department_name, position.position_name, lat, lon, altitude, tracker_user.timestamp " \
+    query = "select tracker_user.id, tracker_user.iduser, user.username, user_data.nama, user_data.pangkat, region.id, region.region_name, department.department_name, position.position_name, lat, lon, altitude, tracker_user.timestamp " \
             "from tracker_user LEFT JOIN user on tracker_user.iduser = user.iduser LEFT JOIN position on user.position_id = position.id " \
             "LEFT JOIN user_data on user_data.iduser = tracker_user.iduser LEFT JOIN department on department.id = position.department_id LEFT JOIN region on region.id = department.region_id " \
             "where tracker_user.id in (select max(tracker_user.id) from tracker_user group by iduser) AND `timestamp` > DATE_SUB(now(),INTERVAL 12 HOUR)"
