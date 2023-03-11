@@ -3926,9 +3926,10 @@ def getpanic_active():
     cursor.execute(query,)
     record = cursor.fetchall()
     result = dict()
+    result = record
     print(record)
     cursor.close()
-    return record
+    return result
 
 @cc_blueprint.route('/getpanic', methods=["GET"])
 @jwt_required()
