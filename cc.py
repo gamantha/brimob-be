@@ -3929,7 +3929,7 @@ def getpanic_active():
     result = record
     print(record)
     cursor.close()
-    return result
+    return jsonify(result)
 
 @cc_blueprint.route('/getpanic', methods=["GET"])
 @jwt_required()
