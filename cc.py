@@ -3876,6 +3876,24 @@ def getduty():
     return result
 
 
+@cc_blueprint.route('/getpanic_active', methods=["GET"])
+@jwt_required()
+def getpanic_active():
+    print('get_panic');
+    user_id = get_jwt_identity()
+
+    db2 = get_db2()
+    cursor = db2.cursor(dictionary=True,buffered=True)
+
+
+    query = "select * from panics where ISNULL(off) order by id asc"
+    cursor.execute(query,)
+    record = cursor.fetchall()
+    result = dict()
+    print(record)
+    cursor.close()
+    return record
+
 @cc_blueprint.route('/getpanic', methods=["GET"])
 @jwt_required()
 def getpanic():
