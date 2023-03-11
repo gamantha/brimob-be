@@ -2320,6 +2320,23 @@ def data_siskamtibmas_read_region():
 
     return jsonify(record)
 
+@cc_blueprint.route('/data_siskamtibmas_latest', methods=["POST"])
+def data_siskamtibmas_latest():
+    db = get_db()
+    region_id = request.json.get('region_id')
+    cursor = db.cursor(dictionary=True)
+
+    query = "select DATE_FORMAT(data_siskamtibmas.tanggal, '%a, %d %b %Y') as tanggal, data_siskamtibmas.a_total, region_name from data_siskamtibmas join region on region.id = data_siskamtibmas.region_id where data_siskamtibmas.id IN (select MAX(id) as 'last' from data_siskamtibmas group by region_id) ORDER BY region_id ASC"
+    cursor.execute(query,)
+
+    record = cursor.fetchall()
+    cursor.close()
+    result = dict()
+    # print(record)
+    temp = dict()
+
+    return jsonify(record)
+
 
 ################### SISKAMTIBMAS CRUD #################################################
 
