@@ -2320,7 +2320,7 @@ def data_siskamtibmas_read_region():
 
     return jsonify(record)
 
-@cc_blueprint.route('/data_siskamtibmas_latest', methods=["POST"])
+@cc_blueprint.route('/data_siskamtibmas_latest', methods=["GET"])
 def data_siskamtibmas_latest():
     db = get_db()
     cursor = db.cursor(dictionary=True)
