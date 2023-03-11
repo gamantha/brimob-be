@@ -3917,14 +3917,10 @@ def getduty():
 
 
 @cc_blueprint.route('/getpanic_active', methods=["GET"])
-@jwt_required()
 def getpanic_active():
     print('get_panic');
-    user_id = get_jwt_identity()
-
     db2 = get_db2()
     cursor = db2.cursor(dictionary=True,buffered=True)
-
 
     query = "select * from (select panics.*, max(tracker_user.id) as max from panics left join tracker_user on panics.user_id = tracker_user.iduser where ISNULL(panics.off) GROUP BY panics.user_id ) as a left join tracker_user on tracker_user.id = a.max"
     cursor.execute(query,)
