@@ -4026,3 +4026,32 @@ def paniconoff():
     cursor.close()
     return result
 
+@cc_blueprint.route('/paniconoff_admin', methods=["POST"])
+@jwt_required()
+def paniconoff_admin():
+    id = request.json.get('id');
+    reason = request.json.get('reason');
+    user_id = get_jwt_identity()
+    db2 = get_db2()
+    cursor = db2.cursor(dictionary=True,buffered=True)
+    query = "UPDATE panics SET off =  NOW(), reason = %s, closer_id = %s WHERE id = %s"
+    cursor.execute(query, (reason, user_id, id,))
+    print(cursor.rowcount);
+    result = dict()
+    try:
+        db2.commit()
+    except mysql.connector.Error as error:
+        print("Failed to update record to database rollback: {}".format(error))
+        # reverting changes because of exception
+        cursor.rollback()
+        result['result'] = 'failed'
+        result['valid'] = 2
+    finally:
+        if cursor.rowcount == 0:
+            result['result'] = 'no row updated - id not found'
+            result['valid'] = 1
+        else:
+            result['result'] = 'success'
+            result['valid'] = 1
+        cursor.close()
+    return jsonify(result)
