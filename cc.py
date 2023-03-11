@@ -3379,7 +3379,7 @@ def laporan_giat_topuser():
     db = get_db()
     cursor = db.cursor(dictionary=True)
     # status = request.json.get('status')
-    query = "select laporan_giat.user_id, user.username, count(id) as 'total' from laporan_giat INNER JOIN user on laporan_giat.user_id = user.iduser group by user_id order by total desc"
+    query = "select laporan_giat.user_id, user.username, count(id) as 'total' from laporan_giat INNER JOIN user on laporan_giat.user_id = user.iduser group by user_id order by total desc limit 10"
     cursor.execute(query,)
     record = cursor.fetchall()
     cursor.close()
