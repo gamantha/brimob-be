@@ -3915,7 +3915,7 @@ def getpanic_active():
     cursor = db2.cursor(dictionary=True,buffered=True)
 
 
-    query = "select * from panics where ISNULL(off) order by id asc"
+    query = "select * from (select panics.*, max(tracker_user.id) as max from panics left join tracker_user on panics.user_id = tracker_user.iduser where ISNULL(panics.off) GROUP BY panics.user_id ) as a left join tracker_user on tracker_user.id = a.max"
     cursor.execute(query,)
     record = cursor.fetchall()
     result = dict()
