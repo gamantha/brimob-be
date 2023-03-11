@@ -3374,6 +3374,19 @@ def laporan_giat_list_peruser():
     result = record
     return jsonify(result)
 
+@cc_blueprint.route('/laporan_giat_topuser', methods=["GET"])
+def laporan_giat_topuser():
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    # status = request.json.get('status')
+    query = "select laporan_giat.user_id, user.username, count(id) as 'total' from laporan_giat INNER JOIN user on laporan_giat.user_id = user.iduser group by user_id order by total desc"
+    cursor.execute(query,)
+    record = cursor.fetchall()
+    cursor.close()
+    result = dict()
+    result = record
+    return jsonify(result)
+
 @cc_blueprint.route('/laporan_giat_list_peruser2', methods=["POST"])
 def laporan_giat_list_peruser2():
     print('laporan giat list peruser2');
