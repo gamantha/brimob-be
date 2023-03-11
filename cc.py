@@ -217,7 +217,7 @@ def get_tracker_activeuser_all():
             "LEFT JOIN user_data on user_data.iduser = tracker_user.iduser LEFT JOIN department on department.id = position.department_id LEFT JOIN region on region.id = department.region_id " \
             "where tracker_user.id in (select max(tracker_user.id) from tracker_user group by iduser) AND `timestamp` > DATE_SUB(now(),INTERVAL 12 HOUR)"
 
-    cursor.execute(query,(region_id,))
+    cursor.execute(query,)
     record = cursor.fetchall()
     result = dict()
     result['data'] = record
@@ -2675,6 +2675,21 @@ def data_pimpinan_read():
             "from data_pimpinan left join department on department.id = data_pimpinan.department_id " \
             "left join region on region.id = data_pimpinan.region_id WHERE data_pimpinan.region_id = %s"
     cursor.execute(query, (str(region_id),))
+    record = cursor.fetchall()
+    cursor.close()
+    result = dict()
+    result = record
+    return jsonify(result)
+
+@cc_blueprint.route('/data_pimpinan_read_all', methods=["POST"])
+def data_pimpinan_read_all():
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    query = "SELECT data_pimpinan.id,data_pimpinan.region_id, region.region_name, department_id, department.department_name, department.image, subdepartment, komandan_nama, komandan_telp, " \
+            "komandan_email, komandan_foto, wakil_nama, wakil_telp, wakil_email, wakil_foto, alamat_lengkap, link_titik_lokasi, lat, lon, data_pimpinan.order " \
+            "from data_pimpinan left join department on department.id = data_pimpinan.department_id " \
+            "left join region on region.id = data_pimpinan.region_id"
+    cursor.execute(query,)
     record = cursor.fetchall()
     cursor.close()
     result = dict()
