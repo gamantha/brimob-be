@@ -267,8 +267,8 @@ def get_tracker_devices():
     db2 = get_db2()
     cursor = db2.cursor(dictionary=True)
     print("star get tracker devices")
-    query = "select a.loc_id, a.tracker_device_id, a.lat, a.lon, a.altitude, a.speed, a.hdop, tracker_device.device_name, tracker_device.device_type, tracker_video.video_url, tracker_device.`status` from " \
-            "(select tracker_loc.id as 'loc_id', tracker_loc.tracker_device_id, tracker_loc.lat, tracker_loc.lon, tracker_loc.altitude, tracker_loc.speed, tracker_loc.hdop " \
+    query = "select a.loc_id, a.tracker_device_id, a.lat, a.lon, a.altitude, a.speed, a.hdop, a.timestamp, tracker_device.device_name, tracker_device.device_type, tracker_video.video_url, tracker_device.`status` from " \
+            "(select tracker_loc.id as 'loc_id', tracker_loc.tracker_device_id, tracker_loc.lat, tracker_loc.lon, tracker_loc.altitude, tracker_loc.speed, tracker_loc.hdop, tracker_loc.timestamp " \
             "from tracker_loc where id in (select max(tracker_loc.id) as id from tracker_loc group by tracker_loc.tracker_device_id)) a " \
             "INNER JOIN tracker_device on a.tracker_device_id = tracker_device.device_id left join tracker_video on tracker_video.tracker_device_id = tracker_device.device_id"
     # query = "SELECT device_id, device_name, device_type, tracker_loc.id, tracker_loc.lat, tracker_loc.lon, tracker_loc.altitude, tracker_loc.hdop, tracker_loc.speed, status, tracker_video.video_url FROM tracker_device LEFT JOIN " \
