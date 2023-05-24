@@ -26,18 +26,14 @@ from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
 
 from mobile import mobile_blueprint
-from ntmc_mobile import ntmc_mobile_blueprint
+# from ntmc_mobile import ntmc_mobile_blueprint
 from cc import cc_blueprint
 from admin import admin_blueprint
 from chart import chart_blueprint
-
 from sqlalchemy import create_engine
 from werkzeug.utils import secure_filename
 from flask import Blueprint
-
-
 import logging
-
 # from datadog import initialize, statsd
 #
 # options = {
@@ -51,7 +47,7 @@ import logging
 app = Flask(__name__)
 CORS(app)
 app.register_blueprint(mobile_blueprint)
-app.register_blueprint(ntmc_mobile_blueprint)
+# app.register_blueprint(ntmc_mobile_blueprint)
 app.register_blueprint(cc_blueprint)
 app.register_blueprint(admin_blueprint)
 app.register_blueprint(chart_blueprint)
@@ -106,9 +102,11 @@ def protected():
     current_user = get_jwt_identity()
     return jsonify(logged_in_as=current_user), 200
 
-
+#
 if __name__ == "__main__":
     app.run(ssl_context='adhoc', debug=True)
 
-# if __name__ == "__main__":
+# # if __name__ == "__main__":
 #     app.run(ssl_context=('cert.pem', 'key.pem'))
+
+

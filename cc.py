@@ -63,13 +63,13 @@ def get_db():
         g.mysql_db = dbObj.connect()
     return g.mysql_db
 
-def get_db2():
-    """Opens a new database connection if there is none yet for the
-    current application context.
-    """
-    if not hasattr(g, 'mysql_db2'):
-        g.mysql_db2 = dbObj2.connect()
-    return g.mysql_db2
+# def get_db2():
+#     """Opens a new database connection if there is none yet for the
+#     current application context.
+#     """
+#     if not hasattr(g, 'mysql_db2'):
+#         g.mysql_db2 = dbObj2.connect()
+#     return g.mysql_db2
 
 
 UPLOAD_FOLDER = './uploads/'
@@ -106,7 +106,7 @@ app.config['UPLOAD_WAKIL_FOLDER'] = UPLOAD_WAKIL_FOLDER
 
 @cc_blueprint.route('/get_config', methods=["GET"])
 def get_config():
-    db2 = get_db2()
+    db2 = get_db()
     cursor = db2.cursor(dictionary=True)
     query = "SELECT * FROM configuration"
     cursor.execute(query)
@@ -129,7 +129,7 @@ def tracker_user():
     lon = request.args.get("lon", None)
     altitude = request.args.get("altitude", None)
 
-    db2 = get_db2()
+    db2 = get_db()
     cursor = db2.cursor(dictionary=True)
     timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
 
@@ -165,7 +165,7 @@ def tracker():
     altitude = request.args.get("altitude", None)
     speed = request.args.get("speed", None)
     ip = request.remote_addr
-    db2 = get_db2()
+    db2 = get_db()
     cursor = db2.cursor(dictionary=True)
     timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
 
@@ -195,7 +195,7 @@ def tracker():
 def get_tracker_user_byregion():
 
     region_id = request.json.get("region_id", None)
-    db2 = get_db2()
+    db2 = get_db()
     cursor = db2.cursor(dictionary=True)
     query = "select tracker_user.id, tracker_user.iduser, user.username, user_data.nama, user_data.pangkat, region.region_name, department.department_name, position.position_name, lat, lon, altitude, tracker_user.timestamp " \
             "from tracker_user LEFT JOIN user on tracker_user.iduser = user.iduser LEFT JOIN position on user.position_id = position.id " \
@@ -210,7 +210,7 @@ def get_tracker_user_byregion():
 @cc_blueprint.route('/get_tracker_activeuser_all', methods=["POST"])
 def get_tracker_activeuser_all():
 
-    db2 = get_db2()
+    db2 = get_db()
     cursor = db2.cursor(dictionary=True)
     query = "select tracker_user.id, tracker_user.iduser, user.username, user_data.nama, user_data.pangkat, region.id as 'region_id', region.region_name, department.department_name, position.position_name, lat, lon, altitude, tracker_user.timestamp " \
             "from tracker_user LEFT JOIN user on tracker_user.iduser = user.iduser LEFT JOIN position on user.position_id = position.id " \
@@ -229,7 +229,7 @@ def get_tracker_activeuser_all():
 def get_tracker_activeuser_byregion():
 
     region_id = request.json.get("region_id", None)
-    db2 = get_db2()
+    db2 = get_db()
     cursor = db2.cursor(dictionary=True)
     query = "select tracker_user.id, tracker_user.iduser, user.username, user_data.nama, user_data.pangkat, region.region_name, department.department_name, position.position_name, lat, lon, altitude, tracker_user.timestamp " \
             "from tracker_user LEFT JOIN user on tracker_user.iduser = user.iduser LEFT JOIN position on user.position_id = position.id " \
@@ -247,7 +247,7 @@ def get_tracker_activeuser_byregion():
 def get_tracker_activeuser_byoperation():
 
     operation_id = request.json.get("operation_id", None)
-    db2 = get_db2()
+    db2 = get_db()
     cursor = db2.cursor(dictionary=True)
     query = "select max(tracker_user.id), tracker_user.iduser, user.username, user_data.nama, user_data.pangkat, region.region_name, department.department_name, position.position_name, lat, lon, altitude, tracker_user.timestamp " \
             "from tracker_user LEFT JOIN user on tracker_user.iduser = user.iduser LEFT JOIN position on user.position_id = position.id " \
@@ -264,7 +264,7 @@ def get_tracker_activeuser_byoperation():
 
 @cc_blueprint.route('/get_tracker_devices', methods=["GET"])
 def get_tracker_devices():
-    db2 = get_db2()
+    db2 = get_db()
     cursor = db2.cursor(dictionary=True)
     print("star get tracker devices")
     query = "select a.loc_id, a.tracker_device_id, a.lat, a.lon, a.altitude, a.speed, a.hdop, a.timestamp, tracker_device.device_name, tracker_device.device_type, tracker_video.video_url, tracker_device.`status` from " \
@@ -288,7 +288,7 @@ def get_tracker_devices():
 def get_tracker_device():
 
     tracker_device_id = request.json.get("tracker_device_id", None)
-    db2 = get_db2()
+    db2 = get_db()
     cursor = db2.cursor(dictionary=True)
     query = "SELECT device_id, device_name, device_type, status, tracker_video.video_url FROM tracker_device LEFT JOIN " \
             "tracker_video on tracker_video.tracker_device_id = tracker_device.device_id WHERE device_id = %s"
@@ -300,7 +300,7 @@ def get_tracker_device():
 def get_tracker_ranmor_byregion():
 
     region_id = request.json.get("region_id", None)
-    db2 = get_db2()
+    db2 = get_db()
     cursor = db2.cursor(dictionary=True)
     query = "select * from ranmor left join region on ranmor.region_id = region.id where region_id = %s"
 
@@ -311,7 +311,7 @@ def get_tracker_ranmor_byregion():
 @cc_blueprint.route('/get_tracker_ranmor_all', methods=["GET"])
 def get_tracker_ranmor_all():
 
-    db2 = get_db2()
+    db2 = get_db()
     cursor = db2.cursor(dictionary=True)
     query = "select * from ranmor left join region on ranmor.region_id = region.id"
 
@@ -324,7 +324,7 @@ def get_tracker_ranmor_all():
 @cc_blueprint.route('/get_tracker_loc', methods=["POST"])
 def get_tracker_loc():
     tracker_device_id = request.json.get("tracker_device_id", None)
-    db2 = get_db2()
+    db2 = get_db()
     cursor = db2.cursor(dictionary=True)
     query = "SELECT id, tracker_device_id, lat, lon, altitude, hdop, speed, timestamp FROM tracker_loc WHERE tracker_device_id = %s ORDER BY id DESC"
     cursor.execute(query, (tracker_device_id,))
@@ -1067,6 +1067,7 @@ def user_get_picturesolve():
 @cc_blueprint.route('/warga_get_mail', methods=["POST"])
 @jwt_required()
 def warga_get_mail():
+    db = get_db()
     username = request.json.get('username', None)
 #originalnya ada 3 query execution di satu API call ini
     cursor = db.cursor(dictionary=True)
@@ -1801,7 +1802,7 @@ def data_siap_gerak_read():
     siap_gerak_id = request.json.get('siap_gerak_id')
     cursor = db.cursor(dictionary=True)
     query = "select data_siap_gerak.id, data_siap_gerak.siap_gerak_id, region_id, region.region_name, region_custom_name, jumlah_riil, jumlah_pelaksana_tugas, " \
-            "jumlah_siap_opsnal, siap_opsnal, jumlah_cadangan, jumlah_siap_opsnal2, siap_opsnal2, jumlah_standby, keterangan, status " \
+            "jumlah_siap_opsnal, siap_opsnal, jumlah_cadangan, jumlah_siap_opsnal2, siap_opsnal2, jumlah_standby, keterangan, status, tgl_submitted " \
             "from data_siap_gerak left join region on region.id = data_siap_gerak.region_id where siap_gerak_id = %s"
     cursor.execute(query,(siap_gerak_id,))
     record = cursor.fetchall()
@@ -1818,7 +1819,7 @@ def data_siap_gerak_read_bydate():
     tanggal = request.json.get('tanggal')
     cursor = db.cursor(dictionary=True)
     query = "select data_siap_gerak.id, tanggal,data_siap_gerak.siap_gerak_id, region_id, region.region_name, region_custom_name, jumlah_riil, jumlah_pelaksana_tugas, " \
-            "jumlah_siap_opsnal, siap_opsnal, jumlah_cadangan, keterangan, status, jumlah_siap_opsnal2, siap_opsnal2, jumlah_standby " \
+            "jumlah_siap_opsnal, siap_opsnal, jumlah_cadangan, keterangan, status, tgl_submitted, jumlah_siap_opsnal2, siap_opsnal2, jumlah_standby " \
             "from data_siap_gerak left join region on region.id = data_siap_gerak.region_id where tanggal = %s order by tanggal DESC"
     cursor.execute(query,(tanggal,))
     record = cursor.fetchall()
@@ -1830,6 +1831,51 @@ def data_siap_gerak_read_bydate():
     return jsonify(record)
 
 
+
+
+
+@cc_blueprint.route('/register', methods=["POST"])
+def register():
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    name = request.json.get('name')
+    email = request.json.get('email')
+    nrp = request.json.get('nrp')
+
+    result = dict()
+
+    print('yeah')
+    # query = "SELECT * FROM siap_gerak WHERE tanggal_laporan = %s"
+    # cursor.execute(query, (tanggal_laporan,))
+    # rows = cursor.fetchall()
+    #
+    # print(len(rows))
+    #
+    # if (len(rows) > 0) :
+    #     cursor.close()
+    #     result['result'] = 'data di tanggal ini sudah tersedia'`
+    #     result['valid'] = 0
+    #     return result
+    #
+    # query = "INSERT INTO siap_gerak (tanggal_laporan, notes1, notes2, kop_1, kop_2) VALUES (%s, %s, %s ,%s, %s)"
+    # cursor.execute(query, (tanggal_laporan, notes1, notes2,kop_1, kop_2,))
+
+    result = dict()
+    try:
+        db.commit()
+    except mysql.connector.Error as error:
+        print("Failed to update record to database rollback: {}".format(error))
+        # reverting changes because of exception
+        cursor.rollback()
+        result['result'] = 'failed'
+        result['valid'] = 0
+    finally:
+
+        cursor.close()
+        result['result'] = 'success'
+        result['valid'] = 1
+    cursor.close()
+    return result
 
 
 
@@ -1942,7 +1988,7 @@ def data_siap_gerak_create():
 
     query = "INSERT INTO data_siap_gerak (tanggal, region_id, region_custom_name, jumlah_riil, jumlah_pelaksana_tugas, " \
             "jumlah_siap_opsnal, siap_opsnal, jumlah_cadangan, " \
-            "jumlah_siap_opsnal2, siap_opsnal2, jumlah_standby, keterangan) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            "jumlah_siap_opsnal2, siap_opsnal2, jumlah_standby, keterangan, tgl_submitted) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, NOW())"
     cursor.execute(query, (tanggal,region_id,region_custom_name, jumlah_riil, jumlah_pelaksana_tugas,
                            jumlah_siap_opsnal, siap_opsnal, jumlah_cadangan, jumlah_siap_opsnal2, siap_opsnal2, jumlah_standby, keterangan,))
     print("after")
@@ -2000,7 +2046,7 @@ def data_siap_gerak_region():
     cursor = db.cursor(dictionary=True)
     region_id = request.json.get('region_id')
 
-    query = "select data_siap_gerak.id, DATE_FORMAT(tanggal, '%a, %d %b %Y') as tanggal, region_id, region.region_name, region_custom_name, jumlah_riil, jumlah_pelaksana_tugas, jumlah_siap_opsnal, siap_opsnal, jumlah_siap_opsnal2, siap_opsnal2, jumlah_standby, jumlah_cadangan, keterangan, data_siap_gerak.status from data_siap_gerak left join region on region_id = region.id where region_id = %s order by data_siap_gerak.id desc"
+    query = "select data_siap_gerak.id, DATE_FORMAT(tanggal, '%a, %d %b %Y') as tanggal, tgl_submitted, region_id, region.region_name, region_custom_name, jumlah_riil, jumlah_pelaksana_tugas, jumlah_siap_opsnal, siap_opsnal, jumlah_siap_opsnal2, siap_opsnal2, jumlah_standby, jumlah_cadangan, keterangan, data_siap_gerak.status from data_siap_gerak left join region on region_id = region.id where region_id = %s order by data_siap_gerak.id desc"
     cursor.execute(query, (region_id,))
     record = cursor.fetchall()
     return jsonify(record)
@@ -3821,7 +3867,7 @@ def onoffduty():
     lon = request.args.get("lon", None)
     onoff = request.args.get("onoff", None)
 
-    db2 = get_db2()
+    db2 = get_db()
     cursor = db2.cursor(dictionary=True,buffered=True)
     # timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
 
@@ -3891,7 +3937,7 @@ def getduty():
     print('get_duty');
     user_id = get_jwt_identity()
 
-    db2 = get_db2()
+    db2 = get_db()
     cursor = db2.cursor(dictionary=True,buffered=True)
 
 
@@ -3919,7 +3965,7 @@ def getduty():
 @cc_blueprint.route('/getpanic_active', methods=["GET"])
 def getpanic_active():
     print('get_panic');
-    db2 = get_db2()
+    db2 = get_db()
     cursor = db2.cursor(dictionary=True,buffered=True)
 
     query = "select * from (select panics.*, max(tracker_user.id) as max from panics left join tracker_user on panics.user_id = tracker_user.iduser where ISNULL(panics.off) GROUP BY panics.user_id ) as a left join tracker_user on tracker_user.id = a.max"
@@ -3937,7 +3983,7 @@ def getpanic():
     print('get_panic');
     user_id = get_jwt_identity()
 
-    db2 = get_db2()
+    db2 = get_db()
     cursor = db2.cursor(dictionary=True,buffered=True)
 
 
@@ -3971,7 +4017,7 @@ def paniconoff():
     user_id = get_jwt_identity()
     reason = request.args.get("reason", None)
 
-    db2 = get_db2()
+    db2 = get_db()
     cursor = db2.cursor(dictionary=True,buffered=True)
     # timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
 
@@ -4040,7 +4086,7 @@ def paniconoff_admin():
     id = request.json.get('id');
     reason = request.json.get('reason');
     user_id = get_jwt_identity()
-    db2 = get_db2()
+    db2 = get_db()
     cursor = db2.cursor(dictionary=True,buffered=True)
     query = "UPDATE panics SET off =  NOW(), reason = %s, closer_id = %s WHERE id = %s"
     cursor.execute(query, (reason, user_id, id,))
