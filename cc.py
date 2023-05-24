@@ -8,6 +8,8 @@ import json
 
 from mysql.connector import Date
 
+import smtplib, ssl
+
 from stats import Stats
 from dbconfig import DBConfig
 from dbconfig2 import DBConfig2
@@ -338,6 +340,7 @@ def get_tracker_loc():
 
 @cc_blueprint.route('/login_user', methods=["POST"])
 def login_user():
+    print('login user')
     username = request.json.get("username", None)
     password = request.json.get("password", None)
     res = authenticate_user(username, password)
@@ -349,11 +352,11 @@ def authenticate_user(username, password):
     # print(r.get("France"));
     db = get_db()
     cursor = db.cursor(dictionary=True)
-
-    username_exists = r.exists(username)
-    if username_exists:
-        print("true")
-        return r.get(username)
+    print('auth username')
+    # username_exists = r.exists(username)
+    # if username_exists:
+    #     print("true")
+    #     return r.get(username)
     query = "SELECT iduser,username,password, level_user, position_id, position.position_name as 'position_name', department.id as 'department_id', department.department_name as 'department_name', " \
             "region.id as 'region_id', region.region_name as 'region_name' FROM user " \
             "LEFT JOIN position ON position.id = user.position_id " \
@@ -1844,18 +1847,40 @@ def register():
 
     result = dict()
 
+    port = 465  # For SSL
+    password = 'nisuhrlgwzoagvty'
+    smtp_server = "smtp.gmail.com"
+    sender_email = "renowijoyo@gmail.com"  # Enter your address
+    receiver_email = "renowijoyo@gamantha.com"  # Enter receiver address
+    message = """\
+    Subject: Hi there
+
+    This message is sent from Python."""
+
+    # Create a secure SSL context
+    context = ssl.create_default_context()
+
+    # with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
+    #     server.login("renowijoyo@gmail.com", password)
+    #     server.sendmail(sender_email, receiver_email, message)
+
+
+
+
     print('yeah')
-    # query = "SELECT * FROM siap_gerak WHERE tanggal_laporan = %s"
-    # cursor.execute(query, (tanggal_laporan,))
-    # rows = cursor.fetchall()
+    query = "SELECT * FROM user WHERE username = %s"
+    cursor.execute(query, (nrp,))
+    rows = cursor.fetchall()
+
+
     #
-    # print(len(rows))
+    print(len(rows))
     #
-    # if (len(rows) > 0) :
-    #     cursor.close()
-    #     result['result'] = 'data di tanggal ini sudah tersedia'`
-    #     result['valid'] = 0
-    #     return result
+    if (len(rows) > 0) :
+        cursor.close()
+        result['result'] = 'data di tanggal ini sudah tersedia'
+        result['valid'] = 0
+        return result
     #
     # query = "INSERT INTO siap_gerak (tanggal_laporan, notes1, notes2, kop_1, kop_2) VALUES (%s, %s, %s ,%s, %s)"
     # cursor.execute(query, (tanggal_laporan, notes1, notes2,kop_1, kop_2,))
