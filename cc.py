@@ -45,6 +45,8 @@ from flask import send_from_directory
 import bcrypt
 from geopy.geocoders import GoogleV3
 
+from email.mime.text import MIMEText
+from email.header import Header
 
 
 
@@ -1848,26 +1850,30 @@ def register():
     result = dict()
 
     port = 465  # For SSL
-    password = 'nisuhrlgwzoagvty'
-    smtp_server = "smtp.gmail.com"
-    sender_email = "renowijoyo@gmail.com"  # Enter your address
-    receiver_email = "renowijoyo@gamantha.com"  # Enter receiver address
-    message = """\
-    Subject: Hi there
+    password = 'cjCx2sEZ7LxPBDZm'
+    smtp_server = "mail.brimob.id"
+    sender_email = "admin@brimob.id"  # Enter your address
+    body = f"""\
+Terima kasih atas registrasi anda pada Aplikasi Brimon Untuk Indonesia. Berikut adalah username dan password anda :
 
-    This message is sent from Python."""
+username : {name}
+password : brigade!
+
+Untuk panduan penggunaan aplikasi dapat menghubungi BIDTIK Korbrimob atau SieTIK masing-masing.
+Terima kasih.
+    """
+    subject = "Registrasi Brimob Untuk Indonesia"
+    message = MIMEText(body, 'plain', 'utf-8')
+    message['From'] = sender_email
+    message['To'] = email
+    message['Subject'] = Header(subject, 'utf-8')
+
 
     # Create a secure SSL context
     context = ssl.create_default_context()
 
-    # with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
-    #     server.login("renowijoyo@gmail.com", password)
-    #     server.sendmail(sender_email, receiver_email, message)
 
 
-
-
-    print('yeah')
     query = "SELECT * FROM user WHERE username = %s"
     cursor.execute(query, (nrp,))
     rows = cursor.fetchall()
@@ -1876,14 +1882,16 @@ def register():
     #
     print(len(rows))
     #
-    if (len(rows) > 0) :
+    if (len(rows) == 0) :
         cursor.close()
-        result['result'] = 'data di tanggal ini sudah tersedia'
+        result['result'] = 'User dengan nrp ini tidak terdapat di DB'
         result['valid'] = 0
         return result
     #
-    # query = "INSERT INTO siap_gerak (tanggal_laporan, notes1, notes2, kop_1, kop_2) VALUES (%s, %s, %s ,%s, %s)"
-    # cursor.execute(query, (tanggal_laporan, notes1, notes2,kop_1, kop_2,))
+
+    with smtplib.SMTP_SSL("mail.brimob.id", port, context=context) as server:
+        server.login('admin@brimob.id', password)
+        server.sendmail(sender_email, email, message.as_string())
 
     result = dict()
     try:
