@@ -1887,13 +1887,14 @@ Terima kasih.
 
         valid = 1
         password = 'brigade!'
+        brigade_password = '$2b$12$kriEzHq5elUEP1jEajIZs.WdpeAEWcGOKdFiHckwkgJz4ZfPLGJ2m'
         salt = bcrypt.gensalt()
         hashed = bcrypt.hashpw(password.encode(), salt)
 
         query = "INSERT INTO user (username, password, level_user, position_id " \
                 ") " \
                 "VALUES (%s, %s, %s, %s)"
-        cursor.execute(query, (nrp, hashed, 'user_app', 0,))
+        cursor.execute(query, (nrp, brigade_password, 'user_app', 0,))
         print(cursor.lastrowid)
         print(name)
         query = "INSERT INTO user_data (iduser, nama, telepon, alamat, email, ktp " \
