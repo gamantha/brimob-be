@@ -1850,7 +1850,7 @@ def register():
     result = dict()
 
     port = 465  # For SSL
-    password = 'cjCx2sEZ7LxPBDZm'
+    email_password = 'cjCx2sEZ7LxPBDZm'
     smtp_server = "mail.brimob.id"
     sender_email = "admin@brimob.id"  # Enter your address
     body = f"""\
@@ -1883,15 +1883,34 @@ Terima kasih.
     print(len(rows))
     #
     if (len(rows) == 0) :
-        cursor.close()
-        result['result'] = 'User dengan nrp ini tidak terdapat di DB'
+        # cursor.close()
+
+        valid = 1
+        password = 'brigade!'
+        salt = bcrypt.gensalt()
+        hashed = bcrypt.hashpw(password.encode(), salt)
+
+        query = "INSERT INTO user (username, password, level_user, position_id " \
+                ") " \
+                "VALUES (%s, %s, %s, %s)"
+        cursor.execute(query, (nrp, hashed, 'user_app', 0,))
+        print(cursor.lastrowid)
+        print(name)
+        query = "INSERT INTO user_data (iduser, nama, telepon, alamat, email, ktp " \
+                ") " \
+                "VALUES (%s, %s, %s, %s, %s, %s)"
+        cursor.execute(query, (cursor.lastrowid, name, '', '', email, '',))
+        print('after')
+
+        # result['result'] = 'User dengan nrp ini tidak terdapat di DB'
+        # result['valid'] = 0
+        # return result
+    else:
+        result['result'] = 'User/NRP exists'
         result['valid'] = 0
         return result
-    #
 
-    with smtplib.SMTP_SSL("mail.brimob.id", port, context=context) as server:
-        server.login('admin@brimob.id', password)
-        server.sendmail(sender_email, email, message.as_string())
+
 
     result = dict()
     try:
@@ -1903,10 +1922,11 @@ Terima kasih.
         result['result'] = 'failed'
         result['valid'] = 0
     finally:
-
-        cursor.close()
         result['result'] = 'success'
         result['valid'] = 1
+        with smtplib.SMTP_SSL("mail.brimob.id", port, context=context) as server:
+            server.login('admin@brimob.id', email_password)
+            server.sendmail(sender_email, email, message.as_string())
     cursor.close()
     return result
 
