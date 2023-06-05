@@ -367,7 +367,7 @@ def authenticate_user(username, password):
             "WHERE username = %s"
     cursor.execute(query, (username,))
     record = cursor.fetchall()
-    cursor.close()
+
     level_user = ''
     position_id = ''
     position_name = ''
@@ -409,11 +409,18 @@ def authenticate_user(username, password):
             res['region_name'] = region_name
             res['token'] = token
 
-
             # jsondumps = json.dumps(token=access_token, iduser=iduser, name=name, level_user=level_user, position_id=position_id, position_name=position_name,
             #                department_id=department_id, department_name=department_name, region_id=region_id,region_name=region_name, valid=valid);
             # response = jsonify(jsondumps);
             # r.set(username, str(response));
+
+
+            query = "UPDATE user SET haslogin = true WHERE iduser = %s"
+            cursor.execute(query, (iduser,))
+
+            db.commit()
+
+            cursor.close()
             return jsonify(token=access_token, iduser=iduser, name=name, level_user=level_user, position_id=position_id, position_name=position_name, department_id=department_id, department_name=department_name, region_id=region_id,region_name=region_name, valid=valid);
         else:
             valid = 2
@@ -424,8 +431,7 @@ def authenticate_user(username, password):
         res['valid'] = valid
         res['response'] = 'username does not exist'
 
-
-
+    cursor.close()
     return res
 
 
@@ -1837,6 +1843,20 @@ def data_siap_gerak_read_bydate():
 
 
 
+
+@cc_blueprint.route('/newuser_tracker', methods=["GET"])
+def newuser_tracker():
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    result = dict()
+    # Create a secure SSL context
+    context = ssl.create_default_context()
+
+    query = "select count(CASE WHEN haslogin is not null THEN iduser END) as 'haslogin', count(CASE WHEN haslogin is null THEN iduser END) as 'notyetlogin' from user"
+    cursor.execute(query,)
+    rows = cursor.fetchone()
+    cursor.close()
+    return jsonify(rows)
 
 
 @cc_blueprint.route('/register', methods=["POST"])
