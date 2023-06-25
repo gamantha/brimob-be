@@ -11,11 +11,18 @@ class DBConfig:
         #     database="ntmc_ccntmc"
         # )
 
+        # dbcon = mysql.connect(
+        #     host="202.67.10.238",
+        #     user="root",
+        #     passwd="dhe123!@#",
+        #     database="cc_brimobdb"
+        # )
+
         dbcon = mysql.connect(
-            host="202.67.10.238",
+            host="202.67.10.227",
             user="root",
             passwd="dhe123!@#",
-            database="cc_brimobdb"
+            database="comcen_brimob"
         )
 
 
