@@ -30,6 +30,7 @@ from mobile import mobile_blueprint
 from cc import cc_blueprint
 from admin import admin_blueprint
 from chart import chart_blueprint
+from korlantas import korlantas_blueprint
 from sqlalchemy import create_engine
 from werkzeug.utils import secure_filename
 from flask import Blueprint
@@ -51,6 +52,7 @@ app.register_blueprint(mobile_blueprint)
 app.register_blueprint(cc_blueprint)
 app.register_blueprint(admin_blueprint)
 app.register_blueprint(chart_blueprint)
+app.register_blueprint(korlantas_blueprint)
 logging.basicConfig(filename='record.log', level=logging.DEBUG, format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
 
 
@@ -85,7 +87,10 @@ def test():
     return ret
 
 
-
+@app.route('/test2')
+def test2():
+    ret = 'halo'
+    return ret
 
 
 
