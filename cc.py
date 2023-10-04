@@ -1195,7 +1195,6 @@ def allowed_image_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_IMAGE_EXTENSIONS
 
 @cc_blueprint.route('/upload_giat_foto', methods=["POST"])
-# @jwt_required()
 def upload_giat_foto():
     print("inside upload image")
     res = dict()
